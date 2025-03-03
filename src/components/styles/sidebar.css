@@ -1,0 +1,19 @@
+.sidebar {
+  width: 280px;
+  height: 80vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+}
+
+.sidebar-closed {
+  width: 0;
+}
+
+.main-page {
+  transition: margin-left 0.3s ease;
+}
+
+.main-page.sidebar-closed {
+  width: 100%;
+  margin-left: 0;
+}

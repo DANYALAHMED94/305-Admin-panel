@@ -1,0 +1,6 @@
+.active {
+  color: rgb(59 130 246);
+}
+.active.p {
+  color: blue;
+}
