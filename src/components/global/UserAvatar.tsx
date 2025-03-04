@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { HiUserCircle } from "react-icons/hi";
 import { FiLogOut } from "react-icons/fi";
+import { useAuthStore } from "../providers/AuthStoreProvider";
 
 interface UserAvatarProps {
   name?: string;
@@ -19,6 +20,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
   name = "John Doe",
   imgSrc,
 }) => {
+  const { logout } = useAuthStore((state) => state);
   const colors = [
     "bg-red-500",
     "bg-blue-500",
@@ -66,6 +68,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
           </Link>
           <Link
             href={"#"}
+            onClick={logout}
             className="p-1 px-3 flex items-center gap-2 rounded-md hover:bg-gray-50"
           >
             <FiLogOut className="text-lg text-gray-600" /> Logout

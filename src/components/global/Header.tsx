@@ -3,9 +3,11 @@ import React from "react";
 import { useThemeStore } from "@/components/providers/ThemeStoreProvider";
 import { GiHamburgerMenu } from "react-icons/gi";
 import UserAvatar from "./UserAvatar";
+import { useAuthStore } from "../providers/AuthStoreProvider";
 
 const Header = () => {
   const { sidebarOpen, toggleSidebar } = useThemeStore((state) => state);
+  const { user } = useAuthStore((state) => state);
 
   return (
     <div className="bg-white p-2 shadow sticky z-[50] top-0">
@@ -19,13 +21,13 @@ const Header = () => {
           )}
           <div className="font-bold text-md">
             <p className="p-2 m-2 text-gray-800 font-medium border-2 border-gray-400 shadow rounded-md">
-              Welcome Back: <span className="text-blue-600">Admin</span>
+              Welcome Back: <span className="text-blue-600">{user?.name}</span>
             </p>
           </div>
         </div>
         <div className="relative">
           <UserAvatar
-            name={"john doe"}
+            name={user?.name}
             imgSrc={
               "https://ik.imagekit.io/deveoper99/blue-circle-with-white-user_78370-4707.avif"
             }
