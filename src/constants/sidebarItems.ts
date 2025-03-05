@@ -6,7 +6,7 @@ import {
   MdScreenSearchDesktop,
 } from "react-icons/md";
 import { TbCategoryFilled } from "react-icons/tb";
-import { GiTeamDowngrade } from "react-icons/gi";
+import { GiSoccerBall, GiTeamDowngrade } from "react-icons/gi";
 import { SidebarItem } from "@/types/sidebar"; // Import the type
 
 export const sidebarItems: SidebarItem[] = [
@@ -16,9 +16,29 @@ export const sidebarItems: SidebarItem[] = [
     path: "/dashboard",
   },
   {
+    name: "Sports",
+    icon: GiSoccerBall, // Alternative: MdSportsSoccer
+    path: "/sports",
+  },
+  {
     name: "Banner",
     icon: MdOutlineScreenShare,
     path: "/banners",
+  },
+  {
+    name: "Team",
+    icon: GiTeamDowngrade,
+    path: "/team",
+  },
+  {
+    name: "Videos",
+    icon: MdLiveTv,
+    path: "/videos",
+  },
+  {
+    name: "Matches",
+    icon: MdScreenSearchDesktop,
+    path: "/matches",
   },
   {
     name: "Categories",
@@ -35,20 +55,5 @@ export const sidebarItems: SidebarItem[] = [
         path: "/subcategory",
       },
     ],
-  },
-  {
-    name: "Team",
-    icon: GiTeamDowngrade,
-    path: "/team",
-  },
-  {
-    name: "Videos",
-    icon: MdLiveTv,
-    path: "/videos",
-  },
-  {
-    name: "Matches",
-    icon: MdScreenSearchDesktop,
-    path: "/matches",
   },
 ];

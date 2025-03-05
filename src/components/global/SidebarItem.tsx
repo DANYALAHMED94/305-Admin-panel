@@ -24,7 +24,9 @@ const SidebarItem: React.FC<{ item: SidebarItemProps }> = ({ item }) => {
       <Link
         href={item.path || "#"}
         className={`flex justify-between items-center gap-3 p-2 h-12 text-gray-600 text-start transition-all hover:bg-gray-200 rounded-md ${
-          pathname === item.path ? "bg-gray-200" : ""
+          pathname === item.path || pathname.startsWith(item?.path!)
+            ? "bg-gray-200"
+            : ""
         }`}
         onClick={(e) => {
           if (item.subSection) {
@@ -36,12 +38,16 @@ const SidebarItem: React.FC<{ item: SidebarItemProps }> = ({ item }) => {
         <div className="flex items-center gap-2">
           <item.icon
             className={`text-2xl ${
-              pathname === item.path ? "text-blue-600" : "hover:text-blue-500"
+              pathname === item.path || pathname.startsWith(item?.path!)
+                ? "text-blue-600"
+                : "hover:text-blue-500"
             }`}
           />
           <span
             className={`text-sm font-semibold ${
-              pathname === item.path ? "text-blue-600" : "text-gray-800"
+              pathname === item.path || pathname.startsWith(item?.path!)
+                ? "text-blue-600"
+                : "text-gray-800"
             }`}
           >
             {item.name}
