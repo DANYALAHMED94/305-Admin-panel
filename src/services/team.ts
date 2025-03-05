@@ -37,7 +37,7 @@ export const updateTeam = async ({
   teamData: Partial<Team>;
 }): Promise<Team> => {
   const response = await axios.put<Team>(`${TEAM_URL}/${id}`, {
-    data: teamData,
+    ...teamData,
   });
   return response.data;
 };

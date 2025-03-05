@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -158,10 +157,8 @@ const SportsDetailPage = ({ params }: { params: { id: string } }) => {
       {/* Teams Section */}
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Teams</h2>
+        <Button onClick={handleAdd}>Add Team</Button>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={handleAdd}>Add Team</Button>
-          </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
@@ -187,7 +184,7 @@ const SportsDetailPage = ({ params }: { params: { id: string } }) => {
             {/* Drag & Drop Image Upload */}
             <div
               {...getRootProps()}
-              className="border-2 border-dashed p-4 mt-4 text-center cursor-pointer"
+              className="border-2 min-h-24 border-dashed p-4 mt-4 text-center cursor-pointer"
             >
               <input {...getInputProps()} />
               {previewImage ? (

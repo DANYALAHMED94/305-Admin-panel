@@ -15,11 +15,29 @@ export const sidebarItems: SidebarItem[] = [
     icon: FaHome,
     path: "/dashboard",
   },
+
   {
-    name: "Sports",
-    icon: GiSoccerBall, // Alternative: MdSportsSoccer
-    path: "/sports",
+    name: "Categories",
+    icon: TbCategoryFilled,
+    path: "/category",
+    // subSection: [
+    //   {
+    //     name: "Add Category",
+    //     icon: MdCategory,
+    //     path: "/category",
+    //   },
+    //   {
+    //     name: "Add Sub Category",
+    //     icon: MdCategory,
+    //     path: "/subcategory",
+    //   },
+    // ],
   },
+  // {
+  //   name: "Sports",
+  //   icon: GiSoccerBall, // Alternative: MdSportsSoccer
+  //   path: "/sports",
+  // },
   {
     name: "Banner",
     icon: MdOutlineScreenShare,
@@ -39,21 +57,5 @@ export const sidebarItems: SidebarItem[] = [
     name: "Matches",
     icon: MdScreenSearchDesktop,
     path: "/matches",
-  },
-  {
-    name: "Categories",
-    icon: TbCategoryFilled,
-    subSection: [
-      {
-        name: "Add Category",
-        icon: MdCategory,
-        path: "/category",
-      },
-      {
-        name: "Add Sub Category",
-        icon: MdCategory,
-        path: "/subcategory",
-      },
-    ],
   },
 ];

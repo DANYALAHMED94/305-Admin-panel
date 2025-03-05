@@ -11,3 +11,10 @@ export type Team = {
   sport: string;
   imageUrl?: string;
 };
+
+export type Category = {
+  _id: string;
+  name: string;
+  imageUrl?: string;
+  parentCategory?: string;
+};
