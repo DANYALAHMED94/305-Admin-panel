@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Trash2 } from "lucide-react";
+import { ArrowLeftIcon, Trash2 } from "lucide-react";
 import {
   getCategoryById,
   createCategory,
@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import { uploadImage } from "@/utils"; // Import the upload function
 import LoadingBall from "@/components/global/LoadingBall";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 const CategoryDetailPage = () => {
   const params = useParams();
@@ -111,6 +112,7 @@ const CategoryDetailPage = () => {
     setImage(null);
     setPreviewImage(null);
     setEditingCategory(null);
+    setIsDialogOpen(false);
   };
 
   const handleEdit = (category: Category) => {
@@ -139,6 +141,11 @@ const CategoryDetailPage = () => {
     <div className="p-6 space-y-6">
       {/* Sport Details */}
       <div className="flex space-x-4">
+        <div>
+          <Link href={"/category"}>
+            <ArrowLeftIcon />
+          </Link>
+        </div>
         <Image
           src={category?.imageUrl || "/default-sport.png"}
           width={300}

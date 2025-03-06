@@ -157,7 +157,12 @@ const CategoriesPage = () => {
           <Card key={category._id}>
             <CardHeader>
               <CardTitle className="text-xl">
-                <Link href={`/category/${category._id}`}>{category.name}</Link>
+                <Link
+                  className="hover:text-blue-600"
+                  href={`/category/${category._id}`}
+                >
+                  {category.name}
+                </Link>
               </CardTitle>
             </CardHeader>
             <CardContent>

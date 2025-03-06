@@ -33,6 +33,12 @@ export const sidebarItems: SidebarItem[] = [
     //   },
     // ],
   },
+
+  {
+    name: "Teams",
+    icon: GiTeamDowngrade,
+    path: "/team",
+  },
   // {
   //   name: "Sports",
   //   icon: GiSoccerBall, // Alternative: MdSportsSoccer
@@ -42,11 +48,6 @@ export const sidebarItems: SidebarItem[] = [
     name: "Banner",
     icon: MdOutlineScreenShare,
     path: "/banners",
-  },
-  {
-    name: "Team",
-    icon: GiTeamDowngrade,
-    path: "/team",
   },
   {
     name: "Videos",

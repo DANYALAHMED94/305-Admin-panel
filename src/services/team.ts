@@ -1,12 +1,12 @@
 import axios from "axios";
-import { Team } from "@/types";
+import { Team, TeamFull } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 const TEAM_URL = `${API_URL}/team`;
 
 // Get all teams
-export const getAllTeams = async (): Promise<Team[]> => {
-  const response = await axios.get<Team[]>(TEAM_URL);
+export const getAllTeams = async (): Promise<TeamFull[]> => {
+  const response = await axios.get<TeamFull[]>(TEAM_URL);
   return response.data;
 };
 
@@ -16,9 +16,13 @@ export const getTeamById = async (id: string): Promise<Team> => {
   return response.data;
 };
 
-// Get teams by sport ID
-export const getTeamsBySport = async (sportId: string): Promise<Team[]> => {
-  const response = await axios.get<Team[]>(`${TEAM_URL}/by-sport/${sportId}`);
+// Get teams by category ID
+export const getTeamsByCategory = async (
+  categoryId: string
+): Promise<Team[]> => {
+  const response = await axios.get<Team[]>(
+    `${TEAM_URL}/by-category/${categoryId}`
+  );
   return response.data;
 };
 
