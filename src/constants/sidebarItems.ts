@@ -4,6 +4,7 @@ import {
   MdCategory,
   MdLiveTv,
   MdScreenSearchDesktop,
+  MdOndemandVideo,
 } from "react-icons/md";
 import { TbCategoryFilled } from "react-icons/tb";
 import { GiSoccerBall, GiTeamDowngrade } from "react-icons/gi";
@@ -20,24 +21,22 @@ export const sidebarItems: SidebarItem[] = [
     name: "Categories",
     icon: TbCategoryFilled,
     path: "/category",
-    // subSection: [
-    //   {
-    //     name: "Add Category",
-    //     icon: MdCategory,
-    //     path: "/category",
-    //   },
-    //   {
-    //     name: "Add Sub Category",
-    //     icon: MdCategory,
-    //     path: "/subcategory",
-    //   },
-    // ],
   },
 
   {
     name: "Teams",
     icon: GiTeamDowngrade,
     path: "/team",
+  },
+  {
+    name: "Videos",
+    icon: MdOndemandVideo, // ✅ Changed to Video-specific icon
+    path: "/videos",
+  },
+  {
+    name: "Live Streams",
+    icon: MdLiveTv,
+    path: "/live-streams",
   },
   // {
   //   name: "Sports",
@@ -49,14 +48,9 @@ export const sidebarItems: SidebarItem[] = [
     icon: MdOutlineScreenShare,
     path: "/banners",
   },
-  {
-    name: "Videos",
-    icon: MdLiveTv,
-    path: "/videos",
-  },
-  {
-    name: "Matches",
-    icon: MdScreenSearchDesktop,
-    path: "/matches",
-  },
+  // {
+  //   name: "Matches",
+  //   icon: MdScreenSearchDesktop,
+  //   path: "/matches",
+  // },
 ];

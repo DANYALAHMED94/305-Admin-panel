@@ -31,3 +31,25 @@ export type Category = {
   imageUrl?: string;
   parentCategory?: string;
 };
+
+export type Video = {
+  _id: string;
+  title: string;
+  type: "recorded" | "live";
+  thumbnail?: string;
+  shortDescription?: string;
+  teamId?: string;
+  category?: string;
+  categories: string[];
+  tags: string[];
+  videoUrl: string;
+  viewsCount: number;
+  monetizationEnabled: boolean;
+  adsEnabled: boolean;
+  length: number;
+  videoEnabled: boolean;
+  uploadDate?: Date;
+  releaseDate?: Date;
+
+  startDateTime?: Date;
+};
