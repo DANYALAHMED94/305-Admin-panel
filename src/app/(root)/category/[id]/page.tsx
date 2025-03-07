@@ -4,7 +4,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -37,14 +44,14 @@ const CategoryDetailPage = () => {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Fetch sport details
+  // Fetch category details
   const { data: category, isLoading: categoryLoading } = useQuery({
     queryKey: ["category", categoryId],
     queryFn: () => getCategoryById(categoryId),
     enabled: !!categoryId,
   });
 
-  // Fetch teams for the sport
+  // Fetch subcategories
   const { data: categories, isLoading: categoriesLoading } = useQuery({
     queryKey: ["categories", categoryId],
     queryFn: () => getCategoriesByParent(categoryId),
@@ -61,7 +68,7 @@ const CategoryDetailPage = () => {
   const updateMutation = useMutation({
     mutationFn: updateCategory,
     onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["categories", categories] }),
+      queryClient.invalidateQueries({ queryKey: ["categories", categoryId] }),
     onError: () => toast.error("Failed to update category"),
   });
 
@@ -139,7 +146,7 @@ const CategoryDetailPage = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Sport Details */}
+      {/* Category Details */}
       <div className="flex space-x-4">
         <div>
           <Link href={"/category"}>
@@ -161,7 +168,7 @@ const CategoryDetailPage = () => {
         </div>
       </div>
 
-      {/* Teams Section */}
+      {/* Subcategories Section */}
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Sub Categories</h2>
         <Button onClick={handleAdd}>Add Sub Category</Button>
@@ -209,32 +216,44 @@ const CategoryDetailPage = () => {
         </Dialog>
       </div>
 
-      {/* Teams List */}
+      {/* Subcategories Table */}
       {categories?.length ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {categories?.map((category) => (
-            <Card key={category._id}>
-              <CardHeader>
-                <CardTitle className="text-xl">{category.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Image
-                  width={200}
-                  height={150}
-                  src={category?.imageUrl || "/default-sport-image.webp"}
-                  alt={category.name}
-                  className="h-44 w-full object-cover rounded-md"
-                />
-                <div className="flex py-2 items-center justify-between">
-                  <Button onClick={() => handleEdit(category)}>Edit</Button>
-                  <Button onClick={() => handleDelete(category._id)}>
-                    <Trash2 />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="min-w-32">Image</TableHead>
+              <TableHead className="w-full">Name</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {categories?.map((category) => (
+              <TableRow key={category._id}>
+                <TableCell className="min-w-32">
+                  <Image
+                    width={100}
+                    height={100}
+                    src={category?.imageUrl || "/default-sport-image.webp"}
+                    alt={category.name}
+                    className="h-16 w-16 object-cover rounded-md"
+                  />
+                </TableCell>
+                <TableCell className="w-full">{category.name}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button onClick={() => handleEdit(category)}>Edit</Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleDelete(category._id)}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       ) : (
         <div className="text-center py-10">
           <p className="text-gray-500 mt-4">

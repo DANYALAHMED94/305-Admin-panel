@@ -10,6 +10,7 @@ import VideoTable from "@/components/videos/VideoTable";
 import ColumnVisibilityPopover from "@/components/videos/ColumnVisibilityPopover";
 import VideoPagination from "@/components/videos/VideoPagination";
 import EmptyState from "@/components/videos/EmptyState";
+import LoadingBall from "@/components/global/LoadingBall";
 
 const VideosPage = () => {
   const [search, setSearch] = useState("");
@@ -70,7 +71,7 @@ const VideosPage = () => {
       </div>
 
       {isLoading ? (
-        <p>Loading videos...</p>
+        <LoadingBall />
       ) : error ? (
         <p>Error loading videos</p>
       ) : data?.videos?.length === 0 ? (

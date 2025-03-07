@@ -14,6 +14,7 @@ import Image from "next/image";
 import { formatTime } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface VideoTableProps {
   videos: VideoFull[];
@@ -85,7 +86,12 @@ const VideoTable: React.FC<VideoTableProps> = ({ videos, visibleColumns }) => {
               )}
               {visibleColumns.title && (
                 <TableCell className="whitespace-nowrap">
-                  {video.title}
+                  <Link
+                    className="hover:text-blue-500"
+                    href={`/videos/details/${video._id}`}
+                  >
+                    {video.title}
+                  </Link>
                 </TableCell>
               )}
               {visibleColumns.type && (
