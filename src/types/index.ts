@@ -38,7 +38,7 @@ export type Video = {
   type: "recorded" | "live";
   thumbnail?: string;
   shortDescription?: string;
-  teamId?: string;
+  teamId?: string[];
   category?: string;
   categories: string[];
   tags: string[];
@@ -60,7 +60,10 @@ export type VideoFull = {
   type: "recorded" | "live";
   thumbnail?: string;
   shortDescription?: string;
-  teamId?: string;
+  teamId?: {
+    _id: string;
+    name: string;
+  }[];
   category?: {
     _id: string;
     name: string;

@@ -10,14 +10,16 @@ import { ImageUpload } from "@/components/ui/ImageUpload";
 import CategoryTree from "@/components/ui/CategoryTree";
 import TagInput from "@/components/ui/TagInput";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createRecordedVideo } from "@/services/video";
-import { useRouter } from "next/navigation";
+import { getVideoById, updateVideo } from "@/services/video";
+import { useRouter, useParams } from "next/navigation";
 import { uploadImage } from "@/utils";
 import TimeInput from "@/components/ui/TimeInput";
 import SwitchField from "@/components/ui/SwitchField";
 import DatePickerField from "@/components/ui/DatePickerField";
 import { getAllTeams } from "@/services/team";
 import TeamSelect from "@/components/ui/TeamSelect";
+import LoadingBall from "@/components/global/LoadingBall";
+import { useEffect } from "react";
 
 // Define the form schema using Zod
 const videoFormSchema = z.object({
@@ -35,38 +37,70 @@ const videoFormSchema = z.object({
     .transform((val) => (val ? new Date(val) : undefined)),
   monetizationEnabled: z.boolean().default(false),
   adsEnabled: z.boolean().default(false),
-  specifyTeams: z.boolean().default(false), // New field for the switch
-  teamId: z.array(z.string()).optional(), // New field for selected teams
+  specifyTeams: z.boolean().default(false),
+  teamId: z.array(z.string()).optional(),
 });
 
 type VideoFormValues = z.infer<typeof videoFormSchema>;
 
-export default function AddVideoPage() {
+export default function EditVideoPage() {
   const router = useRouter();
+  const { id } = useParams();
   const queryClient = useQueryClient();
+
+  // Fetch existing video data
+  const { data: videoData, isLoading } = useQuery({
+    queryKey: ["video", id],
+    queryFn: () => getVideoById(id as string),
+    enabled: !!id, // Only run if ID exists
+  });
+
+  // Fetch teams
+  const { data: teams } = useQuery({
+    queryKey: ["teams"],
+    queryFn: getAllTeams,
+  });
 
   const methods = useForm<VideoFormValues>({
     resolver: zodResolver(videoFormSchema),
     defaultValues: {
+      title: "",
+      videoUrl: "",
+      length: 0,
       videoEnabled: true,
       monetizationEnabled: false,
       adsEnabled: false,
+      specifyTeams: false,
+      thumbnail: "",
+      shortDescription: "",
+      category: "",
+      tags: [],
+      releaseDate: undefined,
+      teamId: [],
     },
   });
 
-  const { data: teams } = useQuery({
-    queryKey: ["teams"],
-    queryFn: getAllTeams, // Replace with your fetch function
-  });
+  // Reset form with fetched video data
+  useEffect(() => {
+    if (videoData) {
+      methods.reset({
+        ...videoData,
+        releaseDate: videoData.releaseDate
+          ? new Date(videoData.releaseDate)
+          : undefined,
+        teamId: videoData.teamId || [],
+      });
+    }
+  }, [videoData, methods]);
 
   const mutation = useMutation({
-    mutationFn: createRecordedVideo,
+    mutationFn: (data: VideoFormValues) => updateVideo(id as string, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["videos"] });
-      router.push("/videos");
+      queryClient.invalidateQueries({ queryKey: ["video", id] });
+      router.push("/videos"); // Redirect to videos page after update
     },
     onError: (error) => {
-      console.error("Error creating video:", error);
+      console.error("Error updating video:", error);
     },
   });
 
@@ -76,10 +110,12 @@ export default function AddVideoPage() {
 
   const specifyTeams = methods.watch("specifyTeams");
 
+  if (isLoading) return <LoadingBall />;
+
   return (
     <div className="container mx-auto p-6 bg-gray-50">
       <div className="my-3 max-w-[900px] rounded-2xl p-6 bg-white shadow-lg mx-auto mb-32">
-        <h1 className="text-2xl font-bold mb-6">Add Recorded Video</h1>
+        <h1 className="text-2xl font-bold mb-6">Edit Recorded Video</h1>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
             <FormInput
@@ -113,34 +149,26 @@ export default function AddVideoPage() {
               label="Tags"
               placeholder="Type and press Enter to add tags"
             />
-            {/* Video Enabled */}
             <SwitchField name="videoEnabled" label="Video Enabled" />
-
-            {/* Release Date */}
             <DatePickerField name="releaseDate" label="Release Date" />
 
-            {/* Specify Teams Switch */}
             <SwitchField name="specifyTeams" label="Wanna Specify Teams?" />
-
-            {/* Team Selection (Conditional) */}
             {specifyTeams && teams && (
               <TeamSelect name="teamId" label="Select Teams" teams={teams} />
             )}
 
-            {/* Monetization Enabled */}
             <SwitchField
               name="monetizationEnabled"
               label="Monetization Enabled"
             />
-
-            {/* Ads Enabled */}
             <SwitchField name="adsEnabled" label="Ads Enabled" />
+
             <Button
               className="w-full py-5 text-xl mt-12"
               type="submit"
               disabled={mutation.isPending}
             >
-              {mutation.isPending ? "Creating..." : "Create"}
+              {mutation.isPending ? "Updating..." : "Update"}
             </Button>
           </form>
         </FormProvider>
