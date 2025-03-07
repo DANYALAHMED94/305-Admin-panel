@@ -13,12 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Trash2 } from "lucide-react";
-import {
-  getTeamsBySport,
-  createTeam,
-  updateTeam,
-  deleteTeam,
-} from "@/services/team";
+import { createTeam, updateTeam, deleteTeam } from "@/services/team";
 import { Team } from "@/types";
 import toast from "react-hot-toast";
 import { getSportById } from "@/services/sport";
@@ -41,10 +36,10 @@ const SportsDetailPage = ({ params }: { params: { id: string } }) => {
   });
 
   // Fetch teams for the sport
-  const { data: teams, isLoading: teamsLoading } = useQuery({
-    queryKey: ["teams", sportId],
-    queryFn: () => getTeamsBySport(sportId),
-  });
+  // const { data: teams, isLoading: teamsLoading } = useQuery({
+  //   queryKey: ["teams", sportId],
+  //   queryFn: () => getTeamsBySport(sportId),
+  // });
 
   const addMutation = useMutation({
     mutationFn: createTeam,
@@ -133,7 +128,7 @@ const SportsDetailPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  if (sportLoading || teamsLoading) return <p>Loading...</p>;
+  if (sportLoading) return <p>Loading...</p>;
 
   return (
     <div className="p-6 space-y-6">
@@ -208,7 +203,7 @@ const SportsDetailPage = ({ params }: { params: { id: string } }) => {
       </div>
 
       {/* Teams List */}
-      {teams?.length ? (
+      {/* {teams?.length ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {teams?.map((team) => (
             <Card key={team._id}>
@@ -240,7 +235,7 @@ const SportsDetailPage = ({ params }: { params: { id: string } }) => {
             No teams created for this sport yet!
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
