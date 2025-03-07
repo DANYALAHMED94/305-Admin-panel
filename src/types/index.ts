@@ -53,3 +53,28 @@ export type Video = {
 
   startDateTime?: Date;
 };
+
+export type VideoFull = {
+  _id: string;
+  title: string;
+  type: "recorded" | "live";
+  thumbnail?: string;
+  shortDescription?: string;
+  teamId?: string;
+  category?: {
+    _id: string;
+    name: string;
+  };
+  categories: string[];
+  tags: string[];
+  videoUrl: string;
+  viewsCount: number;
+  monetizationEnabled: boolean;
+  adsEnabled: boolean;
+  length: number;
+  videoEnabled: boolean;
+  uploadDate?: Date;
+  releaseDate?: Date;
+
+  startDateTime?: Date;
+};

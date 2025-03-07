@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Video } from "@/types";
+import { Video, VideoFull } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
@@ -18,7 +18,11 @@ export const getAllRecordedVideos = async (
   limit: number,
   category?: string,
   tags?: string[]
-): Promise<{ videos: Video[]; totalPages: number; currentPage: number }> => {
+): Promise<{
+  videos: VideoFull[];
+  totalPages: number;
+  currentPage: number;
+}> => {
   try {
     const response = await axiosInstance.get(`${VIDEO_URL}/recorded`, {
       params: { page, limit, category, tags: tags?.join(",") },

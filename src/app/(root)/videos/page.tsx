@@ -3,29 +3,33 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllRecordedVideos } from "@/services/video";
-import { Video } from "@/types";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import VideoTable from "@/components/videos/VideoTable";
+import ColumnVisibilityPopover from "@/components/videos/ColumnVisibilityPopover";
+import VideoPagination from "@/components/videos/VideoPagination";
+import EmptyState from "@/components/videos/EmptyState";
 
 const VideosPage = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>(
+    {
+      title: true,
+      thumbnail: true,
+      category: true,
+      length: true,
+      viewsCount: true,
+      type: false,
+      tags: false,
+      videoEnabled: true,
+      monetizationEnabled: false,
+      adsEnabled: true,
+      releaseDate: true,
+      actions: true,
+    }
+  );
   const limit = 10;
   const router = useRouter();
 
@@ -40,15 +44,28 @@ const VideosPage = () => {
     setPage(1); // Reset to first page on search
   };
 
+  const toggleColumnVisibility = (column: string) => {
+    setVisibleColumns((prev) => ({
+      ...prev,
+      [column]: !prev[column],
+    }));
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <Input
-          placeholder="Search by category..."
-          value={search}
-          onChange={handleSearch}
-          className="w-1/3"
-        />
+        <div className="flex items-center space-x-4">
+          <Input
+            placeholder="Search by title or category..."
+            value={search}
+            onChange={handleSearch}
+            className="w-64"
+          />
+          <ColumnVisibilityPopover
+            visibleColumns={visibleColumns}
+            toggleColumnVisibility={toggleColumnVisibility}
+          />
+        </div>
         <Button onClick={() => router.push("/videos/add")}>Add Video</Button>
       </div>
 
@@ -56,65 +73,20 @@ const VideosPage = () => {
         <p>Loading videos...</p>
       ) : error ? (
         <p>Error loading videos</p>
+      ) : data?.videos?.length === 0 ? (
+        <EmptyState onAddVideo={() => router.push("/videos/add")} />
       ) : (
         <>
-          <Table className="min-h-[50vh]">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Length</TableHead>
-                <TableHead>Views</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data?.videos?.map((video: Video) => (
-                <TableRow key={video._id}>
-                  <TableCell>{video.title}</TableCell>
-                  <TableCell>{video.category}</TableCell>
-                  <TableCell>{video.length || "N/A"}</TableCell>
-                  <TableCell>{video.viewsCount}</TableCell>
-                  <TableCell>
-                    <Button
-                      size="sm"
-                      onClick={() => router.push(`/videos/edit/${video._id}`)}
-                    >
-                      Edit
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-
-          {/* Pagination using ShadCN */}
+          <VideoTable
+            videos={data?.videos || []}
+            visibleColumns={visibleColumns}
+          />
           <div className="flex justify-center mt-4">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                    isActive={page > 1}
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <span className="px-4">
-                    Page {page} of {data?.totalPages}
-                  </span>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={() =>
-                      setPage((prev) =>
-                        prev < data?.totalPages! ? prev + 1 : prev
-                      )
-                    }
-                    isActive={page < data?.totalPages!}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <VideoPagination
+              page={page}
+              totalPages={data?.totalPages || 1}
+              onPageChange={setPage}
+            />
           </div>
         </>
       )}
