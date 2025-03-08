@@ -55,7 +55,7 @@ const VideoDetailPage = () => {
         />
 
         {/* Video Actions */}
-        <VideoActions videoId={video._id} />
+        <VideoActions videoId={video._id} type={video.type} />
       </div>
     </div>
   );

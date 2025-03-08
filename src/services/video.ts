@@ -16,29 +16,47 @@ const VIDEO_URL = "/video";
 export const getAllRecordedVideos = async (
   page: number,
   limit: number,
-  category?: string,
-  tags?: string[]
+  search?: string
 ): Promise<{
   videos: VideoFull[];
   totalPages: number;
   currentPage: number;
+  totalVideos: number;
 }> => {
   try {
     const response = await axiosInstance.get(`${VIDEO_URL}/recorded`, {
-      params: { page, limit, category, tags: tags?.join(",") },
+      params: { page, limit, search },
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching paginated videos:", error);
-    throw new Error("Failed to fetch videos");
+    console.error("Error fetching recorded videos:", error);
+    throw new Error("Failed to fetch recorded videos");
   }
 };
 
 // Fetch all live videos
-export const getAllLiveVideos = async (): Promise<Video[]> => {
+export const getAllLiveVideos = async (
+  page: number,
+  limit: number,
+  search?: string
+): Promise<{
+  videos: VideoFull[];
+  totalPages: number;
+  currentPage: number;
+  totalVideos: number;
+}> => {
   try {
-    const response = await axiosInstance.get(`${VIDEO_URL}/live`);
-    return response?.data ?? [];
+    const response = await axiosInstance.get(`${VIDEO_URL}/live`, {
+      params: { page, limit, search },
+    });
+    return (
+      response?.data ?? {
+        videos: [],
+        totalPages: 0,
+        currentPage: 1,
+        totalVideos: 0,
+      }
+    );
   } catch (error) {
     console.error("Error fetching live videos:", error);
     throw new Error("Failed to fetch live videos");

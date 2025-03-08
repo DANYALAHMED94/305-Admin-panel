@@ -19,9 +19,14 @@ import Link from "next/link";
 interface VideoTableProps {
   videos: VideoFull[];
   visibleColumns: Record<string, boolean>;
+  isLiveStream?: boolean; // Add this prop
 }
 
-const VideoTable: React.FC<VideoTableProps> = ({ videos, visibleColumns }) => {
+const VideoTable: React.FC<VideoTableProps> = ({
+  videos,
+  visibleColumns,
+  isLiveStream = false, // Default to false
+}) => {
   const router = useRouter();
 
   return (
@@ -44,8 +49,14 @@ const VideoTable: React.FC<VideoTableProps> = ({ videos, visibleColumns }) => {
             {visibleColumns.tags && (
               <TableHead className="whitespace-nowrap">Tags</TableHead>
             )}
-            {visibleColumns.length && (
+            {/* Conditionally render length or startDateTime */}
+            {!isLiveStream && visibleColumns.length && (
               <TableHead className="whitespace-nowrap">Length</TableHead>
+            )}
+            {isLiveStream && visibleColumns.startDateTime && (
+              <TableHead className="whitespace-nowrap">
+                Start Date & Time
+              </TableHead>
             )}
             {visibleColumns.viewsCount && (
               <TableHead className="whitespace-nowrap">Views</TableHead>
@@ -59,7 +70,8 @@ const VideoTable: React.FC<VideoTableProps> = ({ videos, visibleColumns }) => {
             {visibleColumns.adsEnabled && (
               <TableHead className="whitespace-nowrap">Ads</TableHead>
             )}
-            {visibleColumns.releaseDate && (
+            {/* Conditionally render releaseDate for recorded videos */}
+            {!isLiveStream && visibleColumns.releaseDate && (
               <TableHead className="whitespace-nowrap">Release Date</TableHead>
             )}
             {visibleColumns.actions && (
@@ -109,9 +121,17 @@ const VideoTable: React.FC<VideoTableProps> = ({ videos, visibleColumns }) => {
                   {video.tags?.join(", ") || "N/A"}
                 </TableCell>
               )}
-              {visibleColumns.length && (
+              {/* Conditionally render length or startDateTime */}
+              {!isLiveStream && visibleColumns.length && (
                 <TableCell className="whitespace-nowrap">
                   {formatTime(video.length) || "N/A"}
+                </TableCell>
+              )}
+              {isLiveStream && visibleColumns.startDateTime && (
+                <TableCell className="whitespace-nowrap">
+                  {video.startDateTime
+                    ? new Date(video.startDateTime).toLocaleString()
+                    : "N/A"}
                 </TableCell>
               )}
               {visibleColumns.viewsCount && (
@@ -134,7 +154,8 @@ const VideoTable: React.FC<VideoTableProps> = ({ videos, visibleColumns }) => {
                   {video.adsEnabled ? "Yes" : "No"}
                 </TableCell>
               )}
-              {visibleColumns.releaseDate && (
+              {/* Conditionally render releaseDate for recorded videos */}
+              {!isLiveStream && visibleColumns.releaseDate && (
                 <TableCell className="whitespace-nowrap">
                   {video.releaseDate
                     ? new Date(video.releaseDate).toLocaleDateString()
@@ -145,7 +166,13 @@ const VideoTable: React.FC<VideoTableProps> = ({ videos, visibleColumns }) => {
                 <TableCell className="whitespace-nowrap">
                   <Button
                     size="sm"
-                    onClick={() => router.push(`/videos/edit/${video._id}`)}
+                    onClick={() =>
+                      router.push(
+                        isLiveStream
+                          ? `/live-streams/edit/${video._id}`
+                          : `/videos/edit/${video._id}`
+                      )
+                    }
                   >
                     Edit
                   </Button>

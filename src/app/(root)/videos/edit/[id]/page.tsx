@@ -2,12 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/FormInput";
 import { FormTextarea } from "@/components/ui/FormTextarea";
 import { ImageUpload } from "@/components/ui/ImageUpload";
-import CategoryTree from "@/components/ui/CategoryTree";
 import TagInput from "@/components/ui/TagInput";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getVideoById, updateVideo } from "@/services/video";
@@ -20,28 +18,8 @@ import { getAllTeams } from "@/services/team";
 import TeamSelect from "@/components/ui/TeamSelect";
 import LoadingBall from "@/components/global/LoadingBall";
 import { useEffect } from "react";
-
-// Define the form schema using Zod
-const videoFormSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  thumbnail: z.string().optional(),
-  shortDescription: z.string().optional(),
-  videoUrl: z.string().min(1, "Video URL is required"),
-  category: z.string().optional(),
-  tags: z.array(z.string()).optional(),
-  length: z.number().min(1, "Video length must be at least 1 second"),
-  videoEnabled: z.boolean().default(true),
-  releaseDate: z
-    .string()
-    .optional()
-    .transform((val) => (val ? new Date(val) : undefined)),
-  monetizationEnabled: z.boolean().default(false),
-  adsEnabled: z.boolean().default(false),
-  specifyTeams: z.boolean().default(false),
-  teamId: z.array(z.string()).optional(),
-});
-
-type VideoFormValues = z.infer<typeof videoFormSchema>;
+import CategorySelector from "@/components/ui/CategorySelector";
+import { videoFormSchema, VideoFormValues } from "@/schemas";
 
 export default function EditVideoPage() {
   const router = useRouter();
@@ -143,7 +121,8 @@ export default function EditVideoPage() {
               label="Video Length (HH:MM:SS or MM:SS)"
               placeholder="Enter video length"
             />
-            <CategoryTree name="category" label="Category" />
+            {/* <CategoryTree name="category" label="Category" /> */}
+            <CategorySelector name="category" label="Category" />
             <TagInput
               name="tags"
               label="Tags"
