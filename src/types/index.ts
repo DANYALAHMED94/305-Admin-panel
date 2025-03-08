@@ -81,3 +81,21 @@ export type VideoFull = {
 
   startDateTime?: Date;
 };
+
+export type Banner = {
+  _id: string;
+  imageUrl: string;
+  videoId: string;
+  isActive: boolean;
+};
+
+export type BannerFull = {
+  _id: string;
+  imageUrl: string;
+  videoId: {
+    _id: string;
+    title: string;
+    thumbnail: string;
+  };
+  isActive: boolean;
+};

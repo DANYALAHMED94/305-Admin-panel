@@ -121,3 +121,23 @@ export const deleteVideo = async (id: string): Promise<void> => {
     throw new Error("Failed to delete video");
   }
 };
+
+export const getAllVideos = async (
+  page: number,
+  limit: number,
+  search?: string
+): Promise<{
+  videos: { _id: string; title: string; thumbnail: string }[];
+  totalPages: number;
+  currentPage: number;
+}> => {
+  try {
+    const response = await axiosInstance.get(`${VIDEO_URL}/getall`, {
+      params: { page, limit, search },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching videos:", error);
+    throw new Error("Failed to fetch videos");
+  }
+};
