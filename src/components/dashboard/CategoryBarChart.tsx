@@ -10,7 +10,7 @@ import {
 } from "recharts";
 
 interface BarChartProps {
-  data: { id: number; name: string; count: number }[];
+  data: { id: string; name: string; count: number }[];
 }
 
 const CategoryBarChart: React.FC<BarChartProps> = ({ data }) => {

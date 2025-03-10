@@ -5,12 +5,8 @@ import TimeInfoCard from "@/components/dashboard/TimeInfoCard";
 import SummaryCards from "@/components/dashboard/SummaryCards";
 import CategoryBarChart from "@/components/dashboard/CategoryBarChart";
 import CategoryLineChart from "@/components/dashboard/CategoryLineChart";
-
-interface Category {
-  id: number;
-  name: string;
-  count: number;
-}
+import { useQuery } from "@tanstack/react-query";
+import { getDashboardStats } from "@/services/stats";
 
 const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -20,33 +16,16 @@ const Dashboard = () => {
     day: string;
     date: string;
   } | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [subCategories, setSubCategories] = useState<Category[]>([]);
-  const [teams, setTeams] = useState<Category[]>([]);
+
+  const { data } = useQuery({
+    queryKey: ["dashboardStats"],
+    queryFn: getDashboardStats,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dummyCategories: Category[] = [
-          { id: 1, name: "Category A", count: 5 },
-          { id: 2, name: "Category B", count: 3 },
-          { id: 3, name: "Category C", count: 7 },
-        ];
-        const dummySubCategories: Category[] = [
-          { id: 1, name: "SubCategory X", count: 4 },
-          { id: 2, name: "SubCategory Y", count: 6 },
-          { id: 3, name: "SubCategory Z", count: 8 },
-        ];
-        const dummyTeams: Category[] = [
-          { id: 1, name: "Team Alpha", count: 7 },
-          { id: 2, name: "Team Beta", count: 3 },
-          { id: 3, name: "Team Gamma", count: 5 },
-        ];
-
         setTime(getTimeInfo());
-        setCategories(dummyCategories);
-        setSubCategories(dummySubCategories);
-        setTeams(dummyTeams);
       } finally {
         setLoading(false);
       }
@@ -87,20 +66,30 @@ const Dashboard = () => {
         <div className="flex flex-col gap-6">
           {time && <TimeInfoCard time={time} />}
           <SummaryCards
-            categoriesCount={categories.length}
-            subCategoriesCount={subCategories.length}
-            teamsCount={teams.length}
+            categoriesCount={data?.totalCategories || 0}
+            subCategoriesCount={data?.totalSubCategories || 0}
+            teamsCount={data?.totalTeams || 0}
           />
           <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
             <div>
-              <CategoryBarChart data={categories} />
+              <CategoryBarChart
+                data={
+                  data?.categories?.map((cat) => ({
+                    id: cat._id,
+                    name: cat.name,
+                    count: cat.count,
+                  })) || []
+                }
+              />
             </div>
             <div>
               <CategoryLineChart
-                data={categories.map((cat, index) => ({
-                  name: cat.name,
-                  value: cat.count + index,
-                }))}
+                data={
+                  data?.viewsPerCategory?.map((cat) => ({
+                    name: cat.name,
+                    value: cat.views,
+                  })) || []
+                }
               />
             </div>
           </div>
