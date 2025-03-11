@@ -11,6 +11,7 @@ import { useDropzone } from "react-dropzone";
 import { UploadCloud } from "lucide-react";
 import { uploadImage } from "@/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import CategorySelectorDropdown from "./CategorySelectorDropdown";
 
 interface TeamModalProps {
   isOpen: boolean;
@@ -113,7 +114,11 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, team }) => {
             </RadioGroup>
 
             {/* Category Selector */}
-            <CategorySelector
+            {/* <CategorySelector
+              selectedCategory={category}
+              onSelect={setCategory}
+            /> */}
+            <CategorySelectorDropdown
               selectedCategory={category}
               onSelect={setCategory}
             />
