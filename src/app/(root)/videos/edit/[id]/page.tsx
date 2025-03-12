@@ -20,6 +20,7 @@ import LoadingBall from "@/components/global/LoadingBall";
 import { useEffect } from "react";
 import CategorySelector from "@/components/ui/CategorySelector";
 import { videoFormSchema, VideoFormValues } from "@/schemas";
+import { VideoUploader } from "@/components/videos/VideoUploader";
 
 export default function EditVideoPage() {
   const router = useRouter();
@@ -111,10 +112,15 @@ export default function EditVideoPage() {
               label="Short Description"
               placeholder="Enter a short description"
             />
-            <FormInput
+            {/* <FormInput
               name="videoUrl"
               label="Video URL"
               placeholder="Enter video URL"
+            /> */}
+            <VideoUploader
+              name="videoUrl"
+              label="Video URL"
+              initialVideoUrl={videoData?.videoUrl}
             />
             <TimeInput
               name="length"

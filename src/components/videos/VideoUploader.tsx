@@ -1,11 +1,10 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
-import { UploadCloud, FileVideo, X } from "lucide-react";
+import { FileVideo, X } from "lucide-react";
 import {
   generatePresignedUrl,
   startMultipartUpload,
@@ -19,16 +18,28 @@ import ReactPlayer from "react-player"; // Import ReactPlayer
 interface VideoUploaderProps {
   name: string;
   label: string;
+  initialVideoUrl?: string; // Optional initial video URL for edit mode
 }
 
 export const VideoUploader: React.FC<VideoUploaderProps> = ({
   name,
   label,
+  initialVideoUrl,
 }) => {
   const { control, setValue } = useFormContext();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string | null>(null);
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string | null>(
+    initialVideoUrl || null
+  );
+
+  // Sync the initialVideoUrl with the uploadedVideoUrl state
+  useEffect(() => {
+    if (initialVideoUrl) {
+      setUploadedVideoUrl(initialVideoUrl);
+      setValue(name, initialVideoUrl);
+    }
+  }, [initialVideoUrl, name, setValue]);
 
   const uploadVideo = useCallback(
     async (file: File) => {
