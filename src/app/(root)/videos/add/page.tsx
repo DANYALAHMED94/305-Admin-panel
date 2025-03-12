@@ -18,6 +18,7 @@ import { getAllTeams } from "@/services/team";
 import TeamSelect from "@/components/ui/TeamSelect";
 import CategorySelector from "@/components/ui/CategorySelector";
 import { videoFormSchema, VideoFormValues } from "@/schemas";
+import { VideoUploader } from "@/components/videos/VideoUploader";
 
 export default function AddVideoPage() {
   const router = useRouter();
@@ -75,11 +76,12 @@ export default function AddVideoPage() {
               label="Short Description"
               placeholder="Enter a short description"
             />
-            <FormInput
+            {/* <FormInput
               name="videoUrl"
               label="Video URL"
               placeholder="Enter video URL"
-            />
+            /> */}
+            <VideoUploader name="videoUrl" label="Video URL" />
             <TimeInput
               name="length"
               label="Video Length (HH:MM:SS or MM:SS)"
