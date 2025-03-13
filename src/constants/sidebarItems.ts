@@ -5,6 +5,7 @@ import {
   MdLiveTv,
   MdScreenSearchDesktop,
   MdOndemandVideo,
+  MdAdsClick,
 } from "react-icons/md";
 import { TbCategoryFilled } from "react-icons/tb";
 import { GiSoccerBall, GiTeamDowngrade } from "react-icons/gi";
@@ -53,4 +54,9 @@ export const sidebarItems: SidebarItem[] = [
   //   icon: MdScreenSearchDesktop,
   //   path: "/matches",
   // },
+  {
+    name: "Ads", // New item for Ads
+    icon: MdAdsClick, // Use the Ads icon
+    path: "/ads", // Define the path for Ads
+  },
 ];

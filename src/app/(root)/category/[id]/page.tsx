@@ -153,13 +153,13 @@ const CategoryDetailPage = () => {
             <ArrowLeftIcon />
           </Link>
         </div>
-        <Image
+        {/* <Image
           src={category?.imageUrl || "/default-sport.png"}
           width={300}
           height={200}
           className="rounded-md"
           alt={category?.name || "Image"}
-        />
+        /> */}
         <div className="h-full gap-3 flex flex-col">
           <h1 className="text-2xl font-bold">{category?.name}</h1>
           <p className="text-gray-500 text-xl font-medium italic">
@@ -221,7 +221,7 @@ const CategoryDetailPage = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="min-w-32">Image</TableHead>
+              {/* <TableHead className="min-w-32">Image</TableHead> */}
               <TableHead className="w-full">Name</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -229,7 +229,7 @@ const CategoryDetailPage = () => {
           <TableBody>
             {categories?.map((category) => (
               <TableRow key={category._id}>
-                <TableCell className="min-w-32">
+                {/* <TableCell className="min-w-32">
                   <Image
                     width={100}
                     height={100}
@@ -237,7 +237,7 @@ const CategoryDetailPage = () => {
                     alt={category.name}
                     className="h-16 w-16 object-cover rounded-md"
                   />
-                </TableCell>
+                </TableCell> */}
                 <TableCell className="w-full">{category.name}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">

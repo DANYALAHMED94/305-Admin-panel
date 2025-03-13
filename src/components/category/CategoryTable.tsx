@@ -21,7 +21,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
       <table className="min-w-full bg-white border border-gray-200 shadow-sm">
         <thead>
           <tr className="bg-gray-100 border-b">
-            <th className="p-3 text-left">Image</th>
+            {/* <th className="p-3 text-left">Image</th> */}
             <th className="p-3 text-left">Name</th>
             <th className="p-3 text-center">Actions</th>
           </tr>
@@ -29,7 +29,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
         <tbody>
           {categories.map((category) => (
             <tr key={category._id} className="border-b">
-              <td className="p-3">
+              {/* <td className="p-3">
                 <Image
                   width={80}
                   height={50}
@@ -37,7 +37,7 @@ const CategoryTable: React.FC<CategoryTableProps> = ({
                   alt={category.name}
                   className="h-14 w-24 object-cover rounded-md"
                 />
-              </td>
+              </td> */}
               <td className="p-3">
                 <Link
                   className="text-blue-600 hover:underline"
