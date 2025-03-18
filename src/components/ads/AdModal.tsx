@@ -19,9 +19,11 @@ import { ImageUpload } from "@/components/ui/ImageUpload";
 import { VideoUploader } from "@/components/videos/VideoUploader";
 import { uploadImage } from "@/utils";
 import SwitchField from "../ui/SwitchField";
+import { FormInput } from "../ui/FormInput";
 
 // Define the form schema using Zod
 const adFormSchema = z.object({
+  title: z.string().min(3, "Please provide a title!"),
   type: z.enum(["image", "video"]),
   mediaUrl: z.string().url("Invalid URL"),
   isActive: z.boolean(),
@@ -42,6 +44,7 @@ const AdModal = ({ isOpen, onClose, ad }: AdModalProps) => {
   const methods = useForm<AdFormValues>({
     resolver: zodResolver(adFormSchema),
     defaultValues: {
+      title: "",
       type: "image",
       mediaUrl: "",
       isActive: true,
@@ -80,12 +83,14 @@ const AdModal = ({ isOpen, onClose, ad }: AdModalProps) => {
   useEffect(() => {
     if (ad) {
       reset({
+        title: ad.title,
         type: ad.type,
         mediaUrl: ad.mediaUrl,
         isActive: ad.isActive,
       });
     } else {
       reset({
+        title: "",
         type: "image",
         mediaUrl: "",
         isActive: true,
@@ -101,6 +106,11 @@ const AdModal = ({ isOpen, onClose, ad }: AdModalProps) => {
         </DialogHeader>
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <FormInput
+              name="title"
+              label="Title"
+              placeholder="Enter ad title"
+            />
             <div>
               <Label>Type</Label>
               <select

@@ -8,6 +8,7 @@ interface FormInputProps {
   placeholder?: string;
   type?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  defaultValue?: number;
 }
 
 export const FormInput = ({

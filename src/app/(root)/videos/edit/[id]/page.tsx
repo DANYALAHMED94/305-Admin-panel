@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/FormInput";
 import { FormTextarea } from "@/components/ui/FormTextarea";
@@ -21,6 +21,7 @@ import { useEffect } from "react";
 import CategorySelector from "@/components/ui/CategorySelector";
 import { videoFormSchema, VideoFormValues } from "@/schemas";
 import { VideoUploader } from "@/components/videos/VideoUploader";
+import { AdSelector } from "@/components/videos/AdSelector"; // Import AdSelector
 
 export default function EditVideoPage() {
   const router = useRouter();
@@ -56,7 +57,13 @@ export default function EditVideoPage() {
       tags: [],
       releaseDate: undefined,
       teamId: [],
+      adCount: 0, // Initialize adCount
+      ads: [], // Initialize ads array
     },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: "ads",
   });
 
   // Reset form with fetched video data
@@ -68,6 +75,8 @@ export default function EditVideoPage() {
           ? new Date(videoData.releaseDate)
           : undefined,
         teamId: videoData.teamId || [],
+        adCount: videoData.ads?.length || 0, // Initialize adCount from existing data
+        ads: videoData.ads || [], // Initialize ads array from existing data
       });
     }
   }, [videoData, methods]);
@@ -88,6 +97,28 @@ export default function EditVideoPage() {
   };
 
   const specifyTeams = methods.watch("specifyTeams");
+  const adsEnabled = methods.watch("adsEnabled");
+  const adCount = methods.watch("adCount");
+  const videoLength = methods.watch("length");
+
+  useEffect(() => {
+    const currentLength = fields.length;
+    if (adCount === undefined) {
+      methods.setValue("ads", []);
+      return;
+    }
+    if (adCount > currentLength) {
+      // Add missing ads
+      for (let i = currentLength; i < adCount; i++) {
+        append({ ad: "", startTime: "" });
+      }
+    } else if (adCount < currentLength) {
+      // Remove extra ads
+      for (let i = currentLength - 1; i >= adCount; i--) {
+        remove(i);
+      }
+    }
+  }, [adCount, fields.length, append, remove]);
 
   if (isLoading) return <LoadingBall />;
 
@@ -96,7 +127,12 @@ export default function EditVideoPage() {
       <div className="my-3 max-w-[900px] rounded-2xl p-6 bg-white shadow-lg mx-auto mb-32">
         <h1 className="text-2xl font-bold mb-6">Edit Recorded Video</h1>
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={methods.handleSubmit(onSubmit, (errors) => {
+              console.log("Form errors:", errors); // Log validation errors
+            })}
+            className="space-y-6"
+          >
             <FormInput
               name="title"
               label="Title"
@@ -112,11 +148,6 @@ export default function EditVideoPage() {
               label="Short Description"
               placeholder="Enter a short description"
             />
-            {/* <FormInput
-              name="videoUrl"
-              label="Video URL"
-              placeholder="Enter video URL"
-            /> */}
             <VideoUploader
               name="videoUrl"
               label="Video URL"
@@ -127,7 +158,6 @@ export default function EditVideoPage() {
               label="Video Length (HH:MM:SS or MM:SS)"
               placeholder="Enter video length"
             />
-            {/* <CategoryTree name="category" label="Category" /> */}
             <CategorySelector name="category" label="Category" />
             <TagInput
               name="tags"
@@ -147,6 +177,28 @@ export default function EditVideoPage() {
               label="Monetization Enabled"
             />
             <SwitchField name="adsEnabled" label="Ads Enabled" />
+
+            {/* Ads Section */}
+            {adsEnabled && (
+              <div className="space-y-6">
+                <FormInput
+                  name="adCount"
+                  label="Number of Ads"
+                  type="number"
+                  onChange={(e) =>
+                    methods.setValue("adCount", parseInt(e.target.value || "0"))
+                  } // Ensure it's always a number
+                />
+                {Array.from({ length: adCount || 0 }).map((_, index) => (
+                  <AdSelector
+                    key={index}
+                    index={index}
+                    control={methods.control}
+                    videoLength={videoLength}
+                  />
+                ))}
+              </div>
+            )}
 
             <Button
               className="w-full py-5 text-xl mt-12"

@@ -8,7 +8,7 @@ type Pagination = {
   total: number;
 };
 
-// Define the response type for getAllAds
+// Define the response type for getAllAds and searchAds
 type GetAllAdsResponse = {
   data: Ad[];
   pagination: Pagination;
@@ -25,7 +25,12 @@ const axiosInstance = axios.create({
 
 const AD_URL = "/ads";
 
-// Fetch all ads with pagination
+/**
+ * Fetch all ads with pagination
+ * @param page - Page number (default: 1)
+ * @param limit - Number of items per page (default: 10)
+ * @returns Promise<GetAllAdsResponse>
+ */
 export const getAllAds = async (
   page: number = 1,
   limit: number = 10
@@ -34,16 +39,44 @@ export const getAllAds = async (
     const response = await axiosInstance.get<GetAllAdsResponse>(AD_URL, {
       params: { page, limit },
     });
-    return (
-      response?.data ?? { data: [], pagination: { page, limit, total: 0 } }
-    );
+    return response.data;
   } catch (error) {
     console.error("Error fetching ads:", error);
     throw new Error("Failed to fetch ads");
   }
 };
 
-// Fetch an ad by ID
+/**
+ * Search ads with a keyword, pagination, and limit
+ * @param search - Search keyword
+ * @param page - Page number (default: 1)
+ * @param limit - Number of items per page (default: 10)
+ * @returns Promise<GetAllAdsResponse>
+ */
+export const searchAds = async (
+  search: string,
+  page: number = 1,
+  limit: number = 10
+): Promise<GetAllAdsResponse> => {
+  try {
+    const response = await axiosInstance.get<GetAllAdsResponse>(
+      `${AD_URL}/search`,
+      {
+        params: { search, page, limit },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error searching ads:", error);
+    throw new Error("Failed to search ads");
+  }
+};
+
+/**
+ * Fetch an ad by ID
+ * @param id - Ad ID
+ * @returns Promise<Ad>
+ */
 export const getAdById = async (id: string): Promise<Ad> => {
   try {
     const response = await axiosInstance.get<Ad>(`${AD_URL}/${id}`);
@@ -54,8 +87,13 @@ export const getAdById = async (id: string): Promise<Ad> => {
   }
 };
 
-// Create a new ad
+/**
+ * Create a new ad
+ * @param data - Ad data
+ * @returns Promise<Ad>
+ */
 export const createAd = async (data: {
+  title: string;
   type: "image" | "video";
   mediaUrl: string;
   isActive?: boolean;
@@ -69,9 +107,14 @@ export const createAd = async (data: {
   }
 };
 
-// Update an existing ad
+/**
+ * Update an existing ad
+ * @param data - Ad data including _id
+ * @returns Promise<Ad>
+ */
 export const updateAd = async (data: {
   _id: string;
+  title: string;
   type: "image" | "video";
   mediaUrl: string;
   isActive?: boolean;
@@ -85,7 +128,11 @@ export const updateAd = async (data: {
   }
 };
 
-// Delete an ad
+/**
+ * Delete an ad by ID
+ * @param id - Ad ID
+ * @returns Promise<void>
+ */
 export const deleteAd = async (id: string): Promise<void> => {
   try {
     await axiosInstance.delete(`${AD_URL}/${id}`);

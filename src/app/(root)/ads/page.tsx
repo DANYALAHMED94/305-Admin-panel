@@ -1,7 +1,7 @@
-"use client"; // Mark this as a Client Component
+"use client";
 
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,49 +13,69 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import AdModal from "@/components/ads/AdModal";
-import { getAllAds } from "@/services/ad";
+import { getAllAds, deleteAd } from "@/services/ad";
 import { Ad } from "@/types";
-import { Edit, Eye } from "lucide-react"; // Icons for edit and view
+import { Edit, Eye, Trash } from "lucide-react"; // Added Trash icon
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import MediaModal from "@/components/ads/MediaModal"; // New component for media preview
+import MediaModal from "@/components/ads/MediaModal";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // For limit selection
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { DeleteConfirmationModal } from "@/components/ui/DeleteConfirmationModal"; // Import the modal
 
 const AdsPage = () => {
+  const queryClient = useQueryClient();
+
   // State for pagination
   const [page, setPage] = React.useState(1);
   const [limit, setLimit] = React.useState(10);
 
-  // Fetch all ads using React Query with pagination
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["ads", page, limit], // Include page and limit in the query key
-    queryFn: () => getAllAds(page, limit), // Pass page and limit to the API call
-  });
-
-  // State for managing the modal
+  // State for managing modals
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [selectedAd, setSelectedAd] = React.useState<Ad | null>(null);
   const [isMediaModalOpen, setIsMediaModalOpen] = React.useState(false);
   const [mediaUrl, setMediaUrl] = React.useState<string>("");
 
+  // State for delete confirmation modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const [adToDelete, setAdToDelete] = React.useState<string | null>(null);
+
+  // Fetch all ads using React Query with pagination
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["ads", page, limit],
+    queryFn: () => getAllAds(page, limit),
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: deleteAd,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ads", page, limit] }); // Refresh the ads list
+      setIsDeleteModalOpen(false); // Close the delete modal
+    },
+    onError: (error) => {
+      console.error("Error deleting ad:", error);
+    },
+  });
+
   // Handle opening the modal for creating a new ad
   const handleCreateAd = () => {
-    setSelectedAd(null); // Reset selected ad
+    setSelectedAd(null);
     setIsModalOpen(true);
   };
 
   // Handle opening the modal for editing an ad
   const handleEditAd = (ad: Ad) => {
-    setSelectedAd(ad); // Set the selected ad
+    setSelectedAd(ad);
     setIsModalOpen(true);
   };
 
@@ -63,6 +83,19 @@ const AdsPage = () => {
   const handleViewAd = (mediaUrl: string) => {
     setMediaUrl(mediaUrl);
     setIsMediaModalOpen(true);
+  };
+
+  // Handle opening the delete confirmation modal
+  const handleDeleteAd = (adId: string) => {
+    setAdToDelete(adId);
+    setIsDeleteModalOpen(true);
+  };
+
+  // Handle confirming the deletion
+  const handleConfirmDelete = () => {
+    if (adToDelete) {
+      deleteMutation.mutate(adToDelete);
+    }
   };
 
   // Handle changing the page
@@ -111,8 +144,8 @@ const AdsPage = () => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Title</TableHead>
               <TableHead>Type</TableHead>
-              <TableHead>Media URL</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -120,9 +153,15 @@ const AdsPage = () => {
           <TableBody>
             {data?.data.map((ad) => (
               <TableRow key={ad._id}>
+                <TableCell>{ad.title}</TableCell>
                 <TableCell>{ad.type}</TableCell>
-                <TableCell>{ad.mediaUrl}</TableCell>
-                <TableCell>{ad.isActive ? "Active" : "Inactive"}</TableCell>
+                <TableCell>
+                  {ad.isActive ? (
+                    <Badge>Active</Badge>
+                  ) : (
+                    <Badge variant="destructive">Inactive</Badge>
+                  )}
+                </TableCell>
                 <TableCell className="flex space-x-2">
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -147,6 +186,18 @@ const AdsPage = () => {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>View Ad</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteAd(ad._id)}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Delete Ad</TooltipContent>
                   </Tooltip>
                 </TableCell>
               </TableRow>
@@ -212,6 +263,15 @@ const AdsPage = () => {
         isOpen={isMediaModalOpen}
         onClose={() => setIsMediaModalOpen(false)}
         mediaUrl={mediaUrl}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Ad"
+        description="Are you sure you want to delete this ad? This action cannot be undone."
       />
     </div>
   );

@@ -46,6 +46,10 @@ export type Video = {
   viewsCount: number;
   monetizationEnabled: boolean;
   adsEnabled: boolean;
+  ads: {
+    ad: string; // Ad ID
+    startTime: string; // HH:MM:SS format
+  }[];
   length: number;
   videoEnabled: boolean;
   uploadDate?: Date;
@@ -74,6 +78,10 @@ export type VideoFull = {
   viewsCount: number;
   monetizationEnabled: boolean;
   adsEnabled: boolean;
+  ads: {
+    ad: string; // Ad ID
+    startTime: string; // HH:MM:SS format
+  }[];
   length: number;
   videoEnabled: boolean;
   uploadDate?: Date;
@@ -102,6 +110,7 @@ export type BannerFull = {
 
 export type Ad = {
   _id: string;
+  title: string;
   type: "image" | "video";
   mediaUrl: string;
   isActive: boolean;

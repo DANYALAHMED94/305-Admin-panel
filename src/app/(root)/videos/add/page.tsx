@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/FormInput";
 import { FormTextarea } from "@/components/ui/FormTextarea";
@@ -19,6 +19,8 @@ import TeamSelect from "@/components/ui/TeamSelect";
 import CategorySelector from "@/components/ui/CategorySelector";
 import { videoFormSchema, VideoFormValues } from "@/schemas";
 import { VideoUploader } from "@/components/videos/VideoUploader";
+import { AdSelector } from "@/components/videos/AdSelector";
+import { useEffect } from "react";
 
 export default function AddVideoPage() {
   const router = useRouter();
@@ -31,6 +33,10 @@ export default function AddVideoPage() {
       monetizationEnabled: false,
       adsEnabled: false,
     },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: "ads",
   });
 
   const { data: teams } = useQuery({
@@ -54,6 +60,28 @@ export default function AddVideoPage() {
   };
 
   const specifyTeams = methods.watch("specifyTeams");
+  const adsEnabled = methods.watch("adsEnabled");
+  const adCount = methods.watch("adCount");
+  const videoLength = methods.watch("length");
+
+  useEffect(() => {
+    const currentLength = fields.length;
+    if (adCount === undefined) {
+      methods.setValue("ads", []);
+      return;
+    }
+    if (adCount > currentLength) {
+      // Add missing ads
+      for (let i = currentLength; i < adCount; i++) {
+        append({ ad: "", startTime: "" });
+      }
+    } else if (adCount < currentLength) {
+      // Remove extra ads
+      for (let i = currentLength - 1; i >= adCount; i--) {
+        remove(i);
+      }
+    }
+  }, [adCount, fields.length, append, remove]);
 
   return (
     <div className="container mx-auto p-6 bg-gray-50">
@@ -116,6 +144,20 @@ export default function AddVideoPage() {
 
             {/* Ads Enabled */}
             <SwitchField name="adsEnabled" label="Ads Enabled" />
+
+            {adsEnabled && (
+              <div className="space-y-6">
+                <FormInput name="adCount" label="Number of Ads" type="number" />
+                {Array.from({ length: adCount || 0 }).map((_, index) => (
+                  <AdSelector
+                    key={index}
+                    index={index}
+                    control={methods.control}
+                    videoLength={videoLength}
+                  />
+                ))}
+              </div>
+            )}
             <Button
               className="w-full py-5 text-xl mt-12"
               type="submit"
