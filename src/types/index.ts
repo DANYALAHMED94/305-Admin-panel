@@ -99,3 +99,12 @@ export type BannerFull = {
   };
   isActive: boolean;
 };
+
+export type Ad = {
+  _id: string;
+  type: "image" | "video";
+  mediaUrl: string;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
