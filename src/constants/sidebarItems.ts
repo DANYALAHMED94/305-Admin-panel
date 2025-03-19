@@ -1,14 +1,13 @@
 import { FaHome } from "react-icons/fa";
 import {
   MdOutlineScreenShare,
-  MdCategory,
   MdLiveTv,
-  MdScreenSearchDesktop,
   MdOndemandVideo,
   MdAdsClick,
+  MdRecommend,
 } from "react-icons/md";
 import { TbCategoryFilled } from "react-icons/tb";
-import { GiSoccerBall, GiTeamDowngrade } from "react-icons/gi";
+import { GiTeamDowngrade } from "react-icons/gi";
 import { SidebarItem } from "@/types/sidebar"; // Import the type
 
 export const sidebarItems: SidebarItem[] = [
@@ -31,7 +30,7 @@ export const sidebarItems: SidebarItem[] = [
   },
   {
     name: "Videos",
-    icon: MdOndemandVideo, // ✅ Changed to Video-specific icon
+    icon: MdOndemandVideo,
     path: "/videos",
   },
   {
@@ -39,24 +38,19 @@ export const sidebarItems: SidebarItem[] = [
     icon: MdLiveTv,
     path: "/live-streams",
   },
-  // {
-  //   name: "Sports",
-  //   icon: GiSoccerBall, // Alternative: MdSportsSoccer
-  //   path: "/sports",
-  // },
   {
     name: "Banner",
     icon: MdOutlineScreenShare,
     path: "/banners",
   },
-  // {
-  //   name: "Matches",
-  //   icon: MdScreenSearchDesktop,
-  //   path: "/matches",
-  // },
   {
-    name: "Ads", // New item for Ads
-    icon: MdAdsClick, // Use the Ads icon
-    path: "/ads", // Define the path for Ads
+    name: "Ads",
+    icon: MdAdsClick,
+    path: "/ads",
+  },
+  {
+    name: "Recommended",
+    icon: MdRecommend,
+    path: "/recommended",
   },
 ];
