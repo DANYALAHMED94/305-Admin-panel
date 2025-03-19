@@ -8,6 +8,8 @@ import {
 } from "react-icons/md";
 import { TbCategoryFilled } from "react-icons/tb";
 import { GiTeamDowngrade } from "react-icons/gi";
+import { RiLiveFill } from "react-icons/ri";
+import { IoTimeSharp } from "react-icons/io5";
 import { SidebarItem } from "@/types/sidebar"; // Import the type
 
 export const sidebarItems: SidebarItem[] = [
@@ -16,13 +18,11 @@ export const sidebarItems: SidebarItem[] = [
     icon: FaHome,
     path: "/dashboard",
   },
-
   {
     name: "Categories",
     icon: TbCategoryFilled,
     path: "/category",
   },
-
   {
     name: "Teams",
     icon: GiTeamDowngrade,
@@ -52,5 +52,15 @@ export const sidebarItems: SidebarItem[] = [
     name: "Recommended",
     icon: MdRecommend,
     path: "/recommended",
+  },
+  {
+    name: "Live Now",
+    icon: RiLiveFill,
+    path: "/live-now",
+  },
+  {
+    name: "Coming Up",
+    icon: IoTimeSharp,
+    path: "/coming-up",
   },
 ];
