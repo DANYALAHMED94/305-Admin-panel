@@ -168,18 +168,16 @@ export const completeMultipartUpload = async (
     const sortedParts = parts.sort((a, b) => a.PartNumber - b.PartNumber);
 
     // Construct the MultipartUpload object
-    const multipartUpload = {
-      Parts: sortedParts.map((part) => ({
-        ETag: part.ETag,
-        PartNumber: part.PartNumber,
-      })),
-    };
+    const multipartUpload = sortedParts.map((part) => ({
+      ETag: part.ETag,
+      PartNumber: part.PartNumber,
+    }));
 
     const response = await axiosInstance.post(`${UPLOAD_URL}/complete-upload`, {
       fileName,
       type,
       uploadId,
-      MultipartUpload: multipartUpload, // Ensure this matches the expected schema
+      parts: multipartUpload, // Ensure this matches the expected schema
     });
 
     return response.data;

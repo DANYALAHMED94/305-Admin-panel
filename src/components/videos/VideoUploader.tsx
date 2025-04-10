@@ -50,7 +50,8 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
         const folder = "video/";
         const fileName = `${folder}${file.name}`;
 
-        if (file.size < 10 * 1024 * 1024) {
+        // if (file.size < 10 * 1024 * 1024) {
+        if (true) {
           // Single-part upload for small files
           const { url } = await generatePresignedUrl(
             fileName,
@@ -111,12 +112,14 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
             });
 
             if (uploadResponse.status === 200) {
+              console.log("Here is upload response--->>>", uploadResponse);
               const etag = uploadResponse.headers.etag;
               parts.push({ ETag: etag, PartNumber: i + 1 });
             } else {
               throw new Error(`Chunk ${i + 1} upload failed`);
             }
           }
+          console.log("Here is upload data:", parts);
 
           const completeResponse = await completeMultipartUpload(
             fileName,
