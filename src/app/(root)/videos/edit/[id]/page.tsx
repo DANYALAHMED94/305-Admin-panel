@@ -22,6 +22,7 @@ import CategorySelector from "@/components/ui/CategorySelector";
 import { videoFormSchema, VideoFormValues } from "@/schemas";
 import { VideoUploader } from "@/components/videos/VideoUploader";
 import { AdSelector } from "@/components/videos/AdSelector"; // Import AdSelector
+import RecommendedCategoriesSelector from "@/components/videos/RecommendedCategoriesSelector";
 
 export default function EditVideoPage() {
   const router = useRouter();
@@ -55,6 +56,7 @@ export default function EditVideoPage() {
       shortDescription: "",
       category: "",
       tags: [],
+      recommendedCategories: [],
       releaseDate: undefined,
       teamId: [],
       adCount: 0, // Initialize adCount
@@ -74,6 +76,7 @@ export default function EditVideoPage() {
         releaseDate: videoData.releaseDate
           ? new Date(videoData.releaseDate)
           : undefined,
+        recommendedCategories: videoData.recommendedCategories || [],
         teamId: videoData.teamId || [],
         adCount: videoData.ads?.length || 0, // Initialize adCount from existing data
         ads: videoData.ads || [], // Initialize ads array from existing data
@@ -159,11 +162,16 @@ export default function EditVideoPage() {
               placeholder="Enter video length"
             />
             <CategorySelector name="category" label="Category" />
-            <TagInput
+            <RecommendedCategoriesSelector
+              name="recommendedCategories"
+              label="Recommended Categories"
+              placeholder="Select recommended categories..."
+            />
+            {/* <TagInput
               name="tags"
               label="Tags"
               placeholder="Type and press Enter to add tags"
-            />
+            /> */}
             <SwitchField name="videoEnabled" label="Video Enabled" />
             <DatePickerField name="releaseDate" label="Release Date" />
 

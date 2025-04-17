@@ -35,6 +35,9 @@ export const videoFormSchema = z.object({
   videoUrl: z.string().min(1, "Video URL is required"),
   category: z.string().optional(),
   tags: z.array(z.string()).optional(),
+  recommendedCategories: z
+    .array(z.string())
+    .min(1, "At least one recommended category is required"),
   length: z.number().min(1, "Video length must be at least 1 second"),
   videoEnabled: z.boolean().default(true),
   releaseDate: z.date().optional(),

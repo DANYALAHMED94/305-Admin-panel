@@ -21,6 +21,7 @@ import { videoFormSchema, VideoFormValues } from "@/schemas";
 import { VideoUploader } from "@/components/videos/VideoUploader";
 import { AdSelector } from "@/components/videos/AdSelector";
 import { useEffect } from "react";
+import RecommendedCategoriesSelector from "@/components/videos/RecommendedCategoriesSelector";
 
 export default function AddVideoPage() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function AddVideoPage() {
     defaultValues: {
       videoEnabled: true,
       monetizationEnabled: false,
+      recommendedCategories: [],
       adsEnabled: false,
     },
   });
@@ -117,11 +119,16 @@ export default function AddVideoPage() {
             />
             {/* <CategoryTree name="category" label="Category" /> */}
             <CategorySelector name="category" label="Category" />
-            <TagInput
+            <RecommendedCategoriesSelector
+              name="recommendedCategories"
+              label="Recommended Categories"
+              placeholder="Select recommended categories..."
+            />
+            {/* <TagInput
               name="tags"
               label="Tags"
               placeholder="Type and press Enter to add tags"
-            />
+            /> */}
             {/* Video Enabled */}
             <SwitchField name="videoEnabled" label="Video Enabled" />
 

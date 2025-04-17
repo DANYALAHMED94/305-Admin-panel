@@ -54,6 +54,7 @@ export type Video = {
   videoEnabled: boolean;
   uploadDate?: Date;
   releaseDate?: Date;
+  recommendedCategories: string[];
 
   startDateTime?: Date;
 };
