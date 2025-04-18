@@ -20,7 +20,7 @@ export interface AuthStoreProviderProps {
 }
 
 export const AuthStoreProvider = ({ children }: AuthStoreProviderProps) => {
-  const storeRef = useRef<AuthStoreApi>(null);
+const storeRef = useRef<AuthStoreApi | null>(null);
   if (!storeRef.current) {
     storeRef.current = createAuthStore(initAuthStore());
   }
