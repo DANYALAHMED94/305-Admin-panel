@@ -18,5 +18,5 @@ const BannersPage = () => {
     </div>
   );
 };
-
+//////
 export default BannersPage;
