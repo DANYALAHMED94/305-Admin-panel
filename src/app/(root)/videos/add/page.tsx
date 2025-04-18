@@ -90,16 +90,23 @@ export default function AddVideoPage() {
       <div className="my-3 max-w-[900px] rounded-2xl p-6 bg-white shadow-lg mx-auto mb-32">
         <h1 className="text-2xl font-bold mb-6">Add Recorded Video</h1>
         <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={methods.handleSubmit(onSubmit, (error) =>
+              console.log(error)
+            )}
+            className="space-y-6"
+          >
             <FormInput
               name="title"
               label="Title"
               placeholder="Enter video title"
+              required
             />
             <ImageUpload
               name="thumbnail"
               label="Thumbnail"
               onUpload={uploadImage}
+              required
             />
             <FormTextarea
               name="shortDescription"
@@ -111,7 +118,7 @@ export default function AddVideoPage() {
               label="Video URL"
               placeholder="Enter video URL"
             /> */}
-            <VideoUploader name="videoUrl" label="Video URL" />
+            <VideoUploader name="videoUrl" label="Video URL" required />
             <TimeInput
               name="length"
               label="Video Length (HH:MM:SS or MM:SS)"

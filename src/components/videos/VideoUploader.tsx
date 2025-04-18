@@ -18,15 +18,21 @@ import ReactPlayer from "react-player"; // Import ReactPlayer
 interface VideoUploaderProps {
   name: string;
   label: string;
-  initialVideoUrl?: string; // Optional initial video URL for edit mode
+  initialVideoUrl?: string;
+  required?: boolean;
 }
 
 export const VideoUploader: React.FC<VideoUploaderProps> = ({
   name,
   label,
   initialVideoUrl,
+  required = false,
 }) => {
-  const { control, setValue } = useFormContext();
+  const {
+    control,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string | null>(
@@ -37,7 +43,7 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
   useEffect(() => {
     if (initialVideoUrl) {
       setUploadedVideoUrl(initialVideoUrl);
-      setValue(name, initialVideoUrl);
+      setValue(name, initialVideoUrl, { shouldValidate: true });
     }
   }, [initialVideoUrl, name, setValue]);
 
@@ -70,7 +76,7 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
             },
           });
 
-          setValue(name, finalUrl);
+          setValue(name, finalUrl, { shouldValidate: true });
           setUploadedVideoUrl(finalUrl);
           toast.success("Video uploaded successfully!");
         } else {
@@ -186,23 +192,28 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
 
   const handleRemoveVideo = () => {
     setUploadedVideoUrl(null);
-    setValue(name, null);
+    setValue(name, "", { shouldValidate: true });
     toast.success("Video removed successfully!");
   };
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={name}>{label}</Label>
+      <Label htmlFor={name}>
+        {label} {required && <span className="text-red-500 ml-1">*</span>}
+      </Label>
       <Controller
         name={name}
         control={control}
-        render={() => (
+        rules={{ required }}
+        render={({ fieldState }) => (
           <div className="flex flex-col gap-4">
             {!uploadedVideoUrl ? (
               <div
                 {...getRootProps()}
                 className={`border-2 border-dashed rounded-md p-4 flex flex-col items-center justify-center cursor-pointer ${
-                  isDragActive
+                  fieldState.error
+                    ? "border-red-500"
+                    : isDragActive
                     ? "border-blue-500 bg-blue-50"
                     : "border-gray-300"
                 }`}
@@ -244,6 +255,12 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
                   <X size={16} className="text-gray-700" />
                 </button>
               </div>
+            )}
+
+            {fieldState.error && (
+              <p className="text-red-500 text-sm mt-1">
+                {fieldState.error.message}
+              </p>
             )}
 
             {isUploading && <Progress value={uploadProgress} className="h-2" />}

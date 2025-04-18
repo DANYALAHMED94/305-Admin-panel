@@ -15,6 +15,10 @@ import { formatTime } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Delete, Trash2 } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteVideo } from "@/services/video";
+import toast from "react-hot-toast";
 
 interface VideoTableProps {
   videos: VideoFull[];
@@ -28,6 +32,27 @@ const VideoTable: React.FC<VideoTableProps> = ({
   isLiveStream = false, // Default to false
 }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteVideo,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({
+        queryKey: isLiveStream ? ["liveVideos"] : ["recordedVideos"],
+      });
+      toast.success("Video deleted successfully");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to delete video");
+    },
+  });
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Do you really want to delete this video?")) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -163,19 +188,28 @@ const VideoTable: React.FC<VideoTableProps> = ({
                 </TableCell>
               )}
               {visibleColumns.actions && (
-                <TableCell className="whitespace-nowrap">
-                  <Button
-                    size="sm"
-                    onClick={() =>
-                      router.push(
-                        isLiveStream
-                          ? `/live-streams/edit/${video._id}`
-                          : `/videos/edit/${video._id}`
-                      )
-                    }
-                  >
-                    Edit
-                  </Button>
+                <TableCell className="whitespace-nowrap ">
+                  <div className="gap-2 flex items-center justify-center ">
+                    <Button
+                      size="sm"
+                      onClick={() =>
+                        router.push(
+                          isLiveStream
+                            ? `/live-streams/edit/${video._id}`
+                            : `/videos/edit/${video._id}`
+                        )
+                      }
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant={"destructive"}
+                      onClick={() => handleDelete(video._id)}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
                 </TableCell>
               )}
             </TableRow>
