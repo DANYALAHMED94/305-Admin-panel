@@ -28,7 +28,7 @@ jobs:
             git pull origin main
 
             # Proper multi-line writing of .env.local using GitHub expression
-            cat > .env.local <<EOL
+            cat > .env <<EOL
             ${{ secrets.FRONTEND_ENV }}
             EOL
 
