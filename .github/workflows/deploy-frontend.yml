@@ -23,15 +23,14 @@ jobs:
           host: ${{ secrets.EC2_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
-          envs: FRONTEND_ENV
           script: |
             cd ~/frontend
             git pull origin main
 
-            # Write multiline .env.local properly
-            cat <<EOF > .env
-            ${FRONTEND_ENV}
-            EOF
+            # Proper multi-line writing of .env.local using GitHub expression
+            cat > .env.local <<EOL
+            ${{ secrets.FRONTEND_ENV }}
+            EOL
 
             npm install --legacy-peer-deps
             npm run build
