@@ -12,7 +12,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -23,14 +23,19 @@ jobs:
           host: ${{ secrets.EC2_IP }}
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
+          envs: FRONTEND_ENV
           script: |
             cd ~/frontend
             git pull origin main
-            echo "$FRONTEND_ENV" > .env
+
+            # Write multiline .env.local properly
+            cat <<EOF > .env
+            ${FRONTEND_ENV}
+            EOF
+
             npm install --legacy-peer-deps
             npm run build
+
             pm2 delete frontend || true
             pm2 start "npm run start" --name frontend
             pm2 save
-        env:
-          FRONTEND_ENV: ${{ secrets.FRONTEND_ENV }}
