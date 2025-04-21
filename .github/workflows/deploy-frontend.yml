@@ -17,12 +17,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build Frontend Locally (Optional)
-        working-directory: ./frontend
-        run: |
-          npm install --legacy-peer-deps
-          npm run build
-
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1
         with:
@@ -30,20 +24,11 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
-            # Navigate to project
             cd ~/frontend
-
-            # Pull latest code
             git pull origin main
-
-            # Write environment variables
             echo "$FRONTEND_ENV" > .env
-
-            # Install dependencies and build
             npm install --legacy-peer-deps
             npm run build
-
-            # Restart frontend using PM2
             pm2 delete frontend || true
             pm2 start "npm run start" --name frontend
             pm2 save
