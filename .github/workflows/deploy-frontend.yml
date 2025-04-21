@@ -7,15 +7,18 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Install Node.js
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Build Frontend
+      - name: Build Frontend Locally (Optional)
+        working-directory: ./frontend
         run: |
           npm install --legacy-peer-deps
           npm run build
@@ -27,11 +30,22 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
+            # Navigate to project
             cd ~/frontend
+
+            # Pull latest code
             git pull origin main
+
+            # Write environment variables
             echo "$FRONTEND_ENV" > .env
-            npm install
+
+            # Install dependencies and build
+            npm install --legacy-peer-deps
             npm run build
-            pm2 restart frontend
+
+            # Restart frontend using PM2
+            pm2 delete frontend || true
+            pm2 start "npm run start" --name frontend
+            pm2 save
         env:
           FRONTEND_ENV: ${{ secrets.FRONTEND_ENV }}
