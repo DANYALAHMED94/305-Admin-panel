@@ -48,19 +48,19 @@ export const sidebarItems: SidebarItem[] = [
     icon: MdAdsClick,
     path: "/ads",
   },
-  {
-    name: "Recommended",
-    icon: MdRecommend,
-    path: "/recommended",
-  },
-  {
-    name: "Live Now",
-    icon: RiLiveFill,
-    path: "/live-now",
-  },
-  {
-    name: "Coming Up",
-    icon: IoTimeSharp,
-    path: "/coming-up",
-  },
+  // {
+  //   name: "Recommended",
+  //   icon: MdRecommend,
+  //   path: "/recommended",
+  // },
+  // {
+  //   name: "Live Now",
+  //   icon: RiLiveFill,
+  //   path: "/live-now",
+  // },
+  // {
+  //   name: "Coming Up",
+  //   icon: IoTimeSharp,
+  //   path: "/coming-up",
+  // },
 ];

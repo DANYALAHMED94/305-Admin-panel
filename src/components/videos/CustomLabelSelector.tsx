@@ -3,21 +3,34 @@
 
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
-import { getAllCategories } from "@/services/category";
-import { X } from "lucide-react";
-import { Category } from "@/types";
+import { X, Radio, ThumbsUp, Calendar } from "lucide-react";
 
-interface RecommendedCategoriesSelectorProps {
+interface CustomLabelSelectorProps {
   name: string;
   label?: string;
   placeholder?: string;
   required?: boolean;
 }
 
-const RecommendedCategoriesSelector: React.FC<
-  RecommendedCategoriesSelectorProps
-> = ({
+const customLabels = [
+  {
+    label: "Live Now",
+    value: "live-now",
+    icon: <Radio className="w-4 h-4 mr-1" />,
+  },
+  {
+    label: "Recommended",
+    value: "recommended",
+    icon: <ThumbsUp className="w-4 h-4 mr-1" />,
+  },
+  {
+    label: "Coming Up",
+    value: "coming-up",
+    icon: <Calendar className="w-4 h-4 mr-1" />,
+  },
+];
+
+const CustomLabelSelector: React.FC<CustomLabelSelectorProps> = ({
   name,
   label,
   placeholder = "Select recommended categories...",
@@ -28,36 +41,21 @@ const RecommendedCategoriesSelector: React.FC<
     watch,
     formState: { errors },
   } = useFormContext();
-  const selectedCategories = watch(name) || [];
-
-  // Fetch all categories
-  const { data: categories, isLoading } = useQuery<Category[]>({
-    queryKey: ["categories"],
-    queryFn: getAllCategories,
-  });
+  const selectedLabels = watch(name) || [];
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const categoryId = e.target.value;
-    if (categoryId && !selectedCategories.includes(categoryId)) {
-      const newCategories = [...selectedCategories, categoryId];
+    if (categoryId && !selectedLabels.includes(categoryId)) {
+      const newCategories = [...selectedLabels, categoryId];
       setValue(name, newCategories, { shouldValidate: true });
     }
     e.target.value = ""; // Reset select
   };
 
   const handleRemove = (categoryId: string) => {
-    const newCategories = selectedCategories.filter(
-      (id: string) => id !== categoryId
-    );
-    setValue(name, newCategories, { shouldValidate: true });
+    const newLabels = selectedLabels.filter((id: string) => id !== categoryId);
+    setValue(name, newLabels, { shouldValidate: true });
   };
-
-  // Filter out already selected categories
-  const availableCategories = categories
-    ? categories.filter(
-        (category) => !selectedCategories.includes(category._id)
-      )
-    : [];
 
   // Check if field is required and has error
   const hasError = !!errors[name];
@@ -75,7 +73,6 @@ const RecommendedCategoriesSelector: React.FC<
         <div className="relative">
           <select
             onChange={handleSelect}
-            disabled={isLoading || availableCategories.length === 0}
             className={`w-full px-3 py-2 border ${
               hasError ? "border-red-500" : "border-gray-300"
             } rounded-md shadow-sm focus:outline-none focus:ring-2 ${
@@ -90,17 +87,11 @@ const RecommendedCategoriesSelector: React.FC<
             <option value="" disabled>
               {placeholder}
             </option>
-            {isLoading ? (
-              <option disabled>Loading categories...</option>
-            ) : availableCategories.length === 0 ? (
-              <option disabled>No more categories available</option>
-            ) : (
-              availableCategories.map((category) => (
-                <option key={category._id} value={category._id}>
-                  {category.name}
-                </option>
-              ))
-            )}
+            {customLabels.map((label) => (
+              <option key={label.value} value={label.value}>
+                {label.label}
+              </option>
+            ))}
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg
@@ -115,14 +106,17 @@ const RecommendedCategoriesSelector: React.FC<
 
         {/* Display selected categories as badges */}
         <div className="mt-2 flex flex-wrap gap-2">
-          {selectedCategories.map((categoryId: string) => {
-            const category = categories?.find((c) => c._id === categoryId);
+          {selectedLabels.map((categoryId: string) => {
+            const label = customLabels?.find((c) => c.value === categoryId);
             return (
               <span
                 key={categoryId}
                 className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-300"
               >
-                {category?.name || categoryId}
+                <span className="flex items-center">
+                  {label?.icon}
+                  {label?.label || categoryId}
+                </span>
                 <button
                   type="button"
                   onClick={() => handleRemove(categoryId)}
@@ -146,4 +140,4 @@ const RecommendedCategoriesSelector: React.FC<
   );
 };
 
-export default RecommendedCategoriesSelector;
+export default CustomLabelSelector;

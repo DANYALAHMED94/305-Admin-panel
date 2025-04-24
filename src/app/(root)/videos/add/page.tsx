@@ -22,6 +22,7 @@ import { VideoUploader } from "@/components/videos/VideoUploader";
 import { AdSelector } from "@/components/videos/AdSelector";
 import { useEffect } from "react";
 import RecommendedCategoriesSelector from "@/components/videos/RecommendedCategoriesSelector";
+import CustomLabelSelector from "@/components/videos/CustomLabelSelector";
 
 export default function AddVideoPage() {
   const router = useRouter();
@@ -32,7 +33,8 @@ export default function AddVideoPage() {
     defaultValues: {
       videoEnabled: true,
       monetizationEnabled: false,
-      recommendedCategories: [],
+      // recommendedCategories: [],
+      customLabels: [],
       adsEnabled: false,
     },
   });
@@ -126,10 +128,15 @@ export default function AddVideoPage() {
             />
             {/* <CategoryTree name="category" label="Category" /> */}
             <CategorySelector name="category" label="Category" />
-            <RecommendedCategoriesSelector
+            {/* <RecommendedCategoriesSelector
               name="recommendedCategories"
               label="Recommended Categories"
               placeholder="Select recommended categories..."
+            /> */}
+            <CustomLabelSelector
+              name="customLabels"
+              label="Custom Labels"
+              placeholder="Select custom labels..."
             />
             {/* <TagInput
               name="tags"

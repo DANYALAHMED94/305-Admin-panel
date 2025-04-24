@@ -20,6 +20,7 @@ const VideosPage = () => {
       title: true,
       thumbnail: true,
       category: true,
+      customLabels: true,
       length: true,
       viewsCount: true,
       type: false,

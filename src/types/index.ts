@@ -11,6 +11,7 @@ export type Team = {
   category: string;
   categories?: string[];
   imageUrl?: string;
+  isSuper7: boolean;
 };
 
 export type TeamFull = {
@@ -23,6 +24,7 @@ export type TeamFull = {
   };
   categories?: string[];
   imageUrl?: string;
+  isSuper7: boolean;
 };
 
 export type Category = {
@@ -55,6 +57,7 @@ export type Video = {
   uploadDate?: Date;
   releaseDate?: Date;
   recommendedCategories: string[];
+  customLabels: string[];
 
   startDateTime?: Date;
 };
@@ -87,6 +90,7 @@ export type VideoFull = {
   videoEnabled: boolean;
   uploadDate?: Date;
   releaseDate?: Date;
+  customLabels: string[];
 
   startDateTime?: Date;
 };

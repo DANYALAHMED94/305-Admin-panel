@@ -35,9 +35,9 @@ export const videoFormSchema = z.object({
   videoUrl: z.string().min(1, "Video URL is required"),
   category: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  recommendedCategories: z
-    .array(z.string())
-    .min(1, "At least one recommended category is required"),
+  // recommendedCategories: z
+  //   .array(z.string())
+  //   .min(1, "At least one recommended category is required"),
   length: z.number().min(1, "Video length must be at least 1 second"),
   videoEnabled: z.boolean().default(true),
   releaseDate: z.date().optional(),
@@ -47,6 +47,7 @@ export const videoFormSchema = z.object({
   adCount: z.number().min(0).optional(),
   specifyTeams: z.boolean().default(false),
   teamId: z.array(z.string()).optional(),
+  customLabels: z.array(z.string()).optional(),
 });
 
 export type VideoFormValues = z.infer<typeof videoFormSchema>;

@@ -12,6 +12,7 @@ import { UploadCloud } from "lucide-react";
 import { uploadImage } from "@/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CategorySelectorDropdown from "./CategorySelectorDropdown";
+import { Checkbox } from "@/components/ui/checkbox"; // Add this import
 
 interface TeamModalProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, team }) => {
   const [category, setCategory] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [isSuper7, setIsSuper7] = useState(false); // Add this state
 
   const queryClient = useQueryClient();
 
@@ -34,11 +36,13 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, team }) => {
       setType(team.type);
       setCategory(team?.category?._id || null);
       setImageUrl(team.imageUrl || null);
+      setIsSuper7(team.isSuper7 || false); // Initialize from team if it exists
     } else {
       setName("");
       setType("general");
       setCategory(null);
       setImageUrl(null);
+      setIsSuper7(false); // Default to false for new teams
     }
   }, [team]);
 
@@ -63,7 +67,7 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, team }) => {
   const { mutate: saveTeam, isPending } = useMutation({
     mutationFn: async () => {
       if (!name || !category || !imageUrl) return;
-      const teamData = { name, type, category, imageUrl };
+      const teamData = { name, type, category, imageUrl, isSuper7 }; // Include isSuper7 in teamData
 
       return team
         ? updateTeam({ id: team._id, teamData })
@@ -114,14 +118,25 @@ const TeamModal: React.FC<TeamModalProps> = ({ isOpen, onClose, team }) => {
             </RadioGroup>
 
             {/* Category Selector */}
-            {/* <CategorySelector
-              selectedCategory={category}
-              onSelect={setCategory}
-            /> */}
             <CategorySelectorDropdown
               selectedCategory={category}
               onSelect={setCategory}
             />
+
+            {/* Super 7 Checkbox */}
+            <div className="flex items-center space-x-2 my-4">
+              <Checkbox
+                id="super7"
+                checked={isSuper7}
+                onCheckedChange={(checked) => setIsSuper7(checked as boolean)}
+              />
+              <label
+                htmlFor="super7"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Do you want to add this team to the super 7?
+              </label>
+            </div>
 
             {/* Drag & Drop Upload Section */}
             <div

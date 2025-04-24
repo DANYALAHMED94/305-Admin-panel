@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/ui/FormInput";
 import { FormTextarea } from "@/components/ui/FormTextarea";
 import { ImageUpload } from "@/components/ui/ImageUpload";
-import TagInput from "@/components/ui/TagInput";
+// import TagInput from "@/components/ui/TagInput";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getVideoById, updateVideo } from "@/services/video";
 import { useRouter, useParams } from "next/navigation";
@@ -22,7 +22,8 @@ import CategorySelector from "@/components/ui/CategorySelector";
 import { videoFormSchema, VideoFormValues } from "@/schemas";
 import { VideoUploader } from "@/components/videos/VideoUploader";
 import { AdSelector } from "@/components/videos/AdSelector"; // Import AdSelector
-import RecommendedCategoriesSelector from "@/components/videos/RecommendedCategoriesSelector";
+// import RecommendedCategoriesSelector from "@/components/videos/RecommendedCategoriesSelector";
+import CustomLabelSelector from "@/components/videos/CustomLabelSelector";
 
 export default function EditVideoPage() {
   const router = useRouter();
@@ -56,11 +57,12 @@ export default function EditVideoPage() {
       shortDescription: "",
       category: "",
       tags: [],
-      recommendedCategories: [],
+      // recommendedCategories: [],
       releaseDate: undefined,
       teamId: [],
       adCount: 0, // Initialize adCount
       ads: [], // Initialize ads array
+      customLabels: [],
     },
   });
   const { fields, append, remove } = useFieldArray({
@@ -76,7 +78,8 @@ export default function EditVideoPage() {
         releaseDate: videoData.releaseDate
           ? new Date(videoData.releaseDate)
           : undefined,
-        recommendedCategories: videoData.recommendedCategories || [],
+        // recommendedCategories: videoData.recommendedCategories || [],
+        customLabels: videoData.customLabels || [],
         teamId: videoData.teamId || [],
         adCount: videoData.ads?.length || 0, // Initialize adCount from existing data
         ads: videoData.ads || [], // Initialize ads array from existing data
@@ -162,10 +165,15 @@ export default function EditVideoPage() {
               placeholder="Enter video length"
             />
             <CategorySelector name="category" label="Category" />
-            <RecommendedCategoriesSelector
+            {/* <RecommendedCategoriesSelector
               name="recommendedCategories"
               label="Recommended Categories"
               placeholder="Select recommended categories..."
+            /> */}
+            <CustomLabelSelector
+              name="customLabels"
+              label="Custom Labels"
+              placeholder="Select custom labels..."
             />
             {/* <TagInput
               name="tags"

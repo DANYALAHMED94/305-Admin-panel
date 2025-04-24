@@ -15,6 +15,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteTeam } from "@/services/team";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { Badge } from "../ui/badge";
 
 interface TeamTableProps {
   teams: TeamFull[] | undefined;
@@ -74,6 +75,9 @@ const TeamTable: React.FC<TeamTableProps> = ({ teams = [], onEdit }) => {
                 <TableCell className="py-3 px-4 font-medium">
                   Category
                 </TableCell>
+                <TableCell className="py-3 px-4 font-medium">
+                  Is Super7 ?
+                </TableCell>
                 <TableCell className="py-3 px-4 font-medium text-center">
                   Actions
                 </TableCell>
@@ -100,6 +104,13 @@ const TeamTable: React.FC<TeamTableProps> = ({ teams = [], onEdit }) => {
                   <TableCell className="py-3 px-4">{team.type}</TableCell>
                   <TableCell className="py-3 px-4">
                     {team.category?.name || "N/A"}
+                  </TableCell>
+                  <TableCell className="py-3 px-4">
+                    {team.isSuper7 ? (
+                      <Badge>Yes</Badge>
+                    ) : (
+                      <Badge variant={"outline"}>No</Badge>
+                    )}
                   </TableCell>
                   <TableCell className="py-3 px-4 flex items-center justify-center gap-3">
                     <Button

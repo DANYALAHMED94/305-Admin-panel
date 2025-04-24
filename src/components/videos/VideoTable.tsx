@@ -15,7 +15,7 @@ import { formatTime } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Delete, Trash2 } from "lucide-react";
+import { Calendar, Radio, ThumbsUp, Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteVideo } from "@/services/video";
 import toast from "react-hot-toast";
@@ -48,6 +48,24 @@ const VideoTable: React.FC<VideoTableProps> = ({
     },
   });
 
+  const labelToIcon = {
+    "live-now": (
+      <span title="Live Now">
+        <Radio className="w-4 h-4 mr-1" />
+      </span>
+    ),
+    recommended: (
+      <span title="Recommended">
+        <ThumbsUp className="w-4 h-4 mr-1" />
+      </span>
+    ),
+    "coming-up": (
+      <span title="Coming Up">
+        <Calendar className="w-4 h-4 mr-1" />
+      </span>
+    ),
+  };
+
   const handleDelete = async (id: string) => {
     if (confirm("Do you really want to delete this video?")) {
       deleteMutation.mutate(id);
@@ -70,6 +88,9 @@ const VideoTable: React.FC<VideoTableProps> = ({
             )}
             {visibleColumns.category && (
               <TableHead className="whitespace-nowrap">Category</TableHead>
+            )}
+            {visibleColumns.customLabels && (
+              <TableHead className="whitespace-nowrap">Flags</TableHead>
             )}
             {visibleColumns.tags && (
               <TableHead className="whitespace-nowrap">Tags</TableHead>
@@ -139,6 +160,15 @@ const VideoTable: React.FC<VideoTableProps> = ({
               {visibleColumns.category && (
                 <TableCell className="whitespace-nowrap">
                   {video?.category?.name || "N/A"}
+                </TableCell>
+              )}
+              {visibleColumns.customLabels && (
+                <TableCell className="whitespace-nowrap">
+                  <div className="flex gap-1">
+                    {video?.customLabels.map((label) => {
+                      return labelToIcon[label as keyof typeof labelToIcon];
+                    }) || "N/A"}
+                  </div>
                 </TableCell>
               )}
               {visibleColumns.tags && (
