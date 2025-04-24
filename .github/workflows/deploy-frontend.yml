@@ -1,0 +1,40 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_IP }}
+          username: ubuntu
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/frontend
+            git pull origin main
+
+            # Proper multi-line writing of .env.local using GitHub expression
+            cat > .env <<EOL
+            ${{ secrets.FRONTEND_ENV }}
+            EOL
+
+            npm install --legacy-peer-deps
+            npm run build
+
+            pm2 delete frontend || true
+            pm2 start "npm run start" --name frontend
+            pm2 save
