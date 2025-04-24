@@ -18,7 +18,7 @@ const BannerCard: React.FC<BannerCardProps> = ({ banner, onToggle }) => {
   const handleToggle = async (checked: boolean) => {
     setIsActive(checked); // Optimistic update
     try {
-      onToggle(banner._id, checked); // Notify parent component
+      onToggle(banner?._id, checked); // Notify parent component
     } catch (error) {
       setIsActive(!checked); // Revert on error
       console.error("Error toggling banner:", error);
@@ -38,15 +38,19 @@ const BannerCard: React.FC<BannerCardProps> = ({ banner, onToggle }) => {
       </div>
 
       {/* Video Title */}
-      <p className="mt-2 text-sm font-medium text-gray-700">
-        Video:{" "}
-        <Link
-          className="hover:text-blue-600"
-          href={`/videos/details/${banner.videoId._id}`}
-        >
-          {banner.videoId.title}
-        </Link>
-      </p>
+      {banner.videoId && (
+        <p className="mt-2 text-sm font-medium text-gray-700">
+          Video:{" "}
+          <Link
+            className="hover:text-blue-600"
+            href={`/videos/details/${banner?.videoId?._id}`}
+          >
+            {banner?.videoId?.title}
+          </Link>
+        </p>
+      )}
+
+      {!banner.videoId && <p className="mt-2 text-sm font-medium">No Video</p>}
 
       {/* Toggle Switch */}
       <div className="flex items-center space-x-2 mt-2">
