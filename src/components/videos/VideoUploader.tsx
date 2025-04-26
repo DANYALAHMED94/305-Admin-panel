@@ -20,6 +20,7 @@ interface VideoUploaderProps {
   label: string;
   initialVideoUrl?: string;
   required?: boolean;
+  onDurationExtracted?: (duration: number) => void;
 }
 
 export const VideoUploader: React.FC<VideoUploaderProps> = ({
@@ -27,6 +28,7 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
   label,
   initialVideoUrl,
   required = false,
+  onDurationExtracted,
 }) => {
   const {
     control,
@@ -38,6 +40,7 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
   const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string | null>(
     initialVideoUrl || null
   );
+  const [playerReady, setPlayerReady] = useState(false);
 
   // Sync the initialVideoUrl with the uploadedVideoUrl state
   useEffect(() => {
@@ -46,6 +49,12 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
       setValue(name, initialVideoUrl, { shouldValidate: true });
     }
   }, [initialVideoUrl, name, setValue]);
+
+  const handleDuration = (duration: number) => {
+    if (onDurationExtracted) {
+      onDurationExtracted(Math.floor(duration)); // Round to nearest second
+    }
+  };
 
   const uploadVideo = useCallback(
     async (file: File) => {
@@ -246,6 +255,7 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
                   controls
                   width="100%"
                   height="auto"
+                  onDuration={handleDuration}
                 />
                 {/* Cross button to remove the video */}
                 <button

@@ -68,6 +68,10 @@ export default function AddVideoPage() {
   const adCount = methods.watch("adCount");
   const videoLength = methods.watch("length");
 
+  const handleDurationExtracted = (duration: number) => {
+    methods.setValue("length", duration, { shouldValidate: true });
+  };
+
   useEffect(() => {
     const currentLength = fields.length;
     if (adCount === undefined) {
@@ -120,7 +124,12 @@ export default function AddVideoPage() {
               label="Video URL"
               placeholder="Enter video URL"
             /> */}
-            <VideoUploader name="videoUrl" label="Video URL" required />
+            <VideoUploader
+              name="videoUrl"
+              label="Video URL"
+              required
+              onDurationExtracted={handleDurationExtracted}
+            />
             <TimeInput
               name="length"
               label="Video Length (HH:MM:SS or MM:SS)"
