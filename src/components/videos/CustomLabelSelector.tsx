@@ -13,11 +13,11 @@ interface CustomLabelSelectorProps {
 }
 
 const customLabels = [
-  {
-    label: "Live Now",
-    value: "live-now",
-    icon: <Radio className="w-4 h-4 mr-1" />,
-  },
+  // {
+  //   label: "Live Now",
+  //   value: "live-now",
+  //   icon: <Radio className="w-4 h-4 mr-1" />,
+  // },
   {
     label: "Recommended",
     value: "recommended",
