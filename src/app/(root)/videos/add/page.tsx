@@ -59,10 +59,20 @@ export default function AddVideoPage() {
     },
   });
 
-  const onSubmit = (data: VideoFormValues) => {
-    mutation.mutate(data);
+  // const onSubmit = (data: VideoFormValues) => {
+  //   mutation.mutate(data);
+  // };
+  const onSubmit = async (data: VideoFormValues) => {
+    // Convert releaseDate to proper Date object if it exists
+    const submissionData = {
+      ...data,
+      releaseDate: data.releaseDate ? new Date(data.releaseDate) : undefined,
+    };
+  
+    console.log("Submitting data:", submissionData); // Debug log
+    mutation.mutate(submissionData);
   };
-
+  
   const specifyTeams = methods.watch("specifyTeams");
   const adsEnabled = methods.watch("adsEnabled");
   const adCount = methods.watch("adCount");
@@ -189,7 +199,7 @@ export default function AddVideoPage() {
               </div>
             )}
             <Button
-              className="w-full py-5 text-xl mt-12"
+              className="w-full py-5 text-xl mt-12 cursor-pointer"
               type="submit"
               disabled={mutation.isPending}
             >

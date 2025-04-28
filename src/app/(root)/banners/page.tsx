@@ -11,7 +11,7 @@ const BannersPage = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Banners</h1>
         <Link href="/banners/create">
-          <Button>Create Banner</Button>
+          <Button className="cursor-pointer">Create Banner</Button>
         </Link>
       </div>
       <BannerList />
