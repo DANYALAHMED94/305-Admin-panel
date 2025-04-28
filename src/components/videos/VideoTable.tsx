@@ -229,14 +229,14 @@ const VideoTable: React.FC<VideoTableProps> = ({
                             : `/videos/edit/${video._id}`
                         )
                       }
-                    >
+                    className="cursor-pointer">
                       Edit
                     </Button>
                     <Button
                       size="sm"
                       variant={"destructive"}
                       onClick={() => handleDelete(video._id)}
-                    >
+                    className="cursor-pointer">
                       <Trash2 />
                     </Button>
                   </div>

@@ -22,10 +22,13 @@ const VideoActions: React.FC<VideoActionsProps> = ({ videoId, type }) => {
               : `/videos/edit/${videoId}`
           )
         }
+        className="cursor-pointe"
       >
         Edit Video
       </Button>
-      <Button variant="destructive">Delete Video</Button>
+      <Button variant="destructive" className="cursor-pointer">
+        Delete Video
+      </Button>
     </div>
   );
 };

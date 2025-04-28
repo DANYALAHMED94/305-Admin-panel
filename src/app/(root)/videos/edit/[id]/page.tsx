@@ -71,6 +71,7 @@ export default function EditVideoPage() {
   });
 
   // Reset form with fetched video data
+  // Inside the useEffect that resets the form
   useEffect(() => {
     if (videoData) {
       methods.reset({
@@ -78,11 +79,12 @@ export default function EditVideoPage() {
         releaseDate: videoData.releaseDate
           ? new Date(videoData.releaseDate)
           : undefined,
-        // recommendedCategories: videoData.recommendedCategories || [],
         customLabels: videoData.customLabels || [],
+        // Set specifyTeams based on whether teamId exists and has items
+        specifyTeams: !!videoData.teamId?.length,
         teamId: videoData.teamId || [],
-        adCount: videoData.ads?.length || 0, // Initialize adCount from existing data
-        ads: videoData.ads || [], // Initialize ads array from existing data
+        adCount: videoData.ads?.length || 0,
+        ads: videoData.ads || [],
       });
     }
   }, [videoData, methods]);

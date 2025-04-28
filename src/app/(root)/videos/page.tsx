@@ -68,7 +68,7 @@ const VideosPage = () => {
             toggleColumnVisibility={toggleColumnVisibility}
           />
         </div>
-        <Button onClick={() => router.push("/videos/add")}>Add Video</Button>
+        <Button onClick={() => router.push("/videos/add")} className="cursor-pointer">Add Video</Button>
       </div>
 
       {isLoading ? (
