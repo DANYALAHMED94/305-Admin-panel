@@ -63,7 +63,7 @@ const BannerCard: React.FC<BannerCardProps> = ({ banner, onToggle }) => {
       {/* Edit Button */}
       <div className="mt-4">
         <Link href={`/banners/edit/${banner._id}`}>
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full cursor-pointer">
             Edit Banner
           </Button>
         </Link>

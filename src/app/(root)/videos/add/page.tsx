@@ -162,8 +162,11 @@ export default function AddVideoPage() {
                 ))}
               </div>
             )}
-
-            <Button className="w-full py-5 text-xl mt-12" type="submit" disabled={mutation.isPending}>
+            <Button
+              className="w-full py-5 text-xl mt-12 cursor-pointer"
+              type="submit"
+              disabled={mutation.isPending}
+            >
               {mutation.isPending ? "Creating..." : "Create"}
             </Button>
           </form>

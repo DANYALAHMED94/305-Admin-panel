@@ -37,7 +37,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({ name, label }) => {
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {field.value ? (
-                  format(new Date(field.value), "PPP") // Format the date (e.g., "January 1, 2023")
+                  format(new Date(field.value), "PPP")
                 ) : (
                   <span>Pick a date</span>
                 )}
@@ -48,8 +48,8 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({ name, label }) => {
                 mode="single"
                 selected={field.value ? new Date(field.value) : undefined}
                 onSelect={(date) => {
-                  field.onChange(date ? date.toISOString() : undefined); // Convert to ISO string
-                  setIsOpen(false); // Close the popover
+                  field.onChange(date); // Send the Date object directly
+                  setIsOpen(false);
                 }}
                 initialFocus
               />
