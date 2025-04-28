@@ -20,7 +20,7 @@ const VideoDropdown: React.FC<VideoDropdownProps> = ({ onSelect, videoId }) => {
     useInfiniteQuery({
       queryKey: ["videos", search],
       queryFn: ({ pageParam = 1 }) => getAllVideos(pageParam, 10, search),
-      initialPageParam: 1, // Add this line
+      initialPageParam: 1,
       getNextPageParam: (lastPage) => {
         if (lastPage.currentPage < lastPage.totalPages) {
           return lastPage.currentPage + 1;
@@ -30,6 +30,12 @@ const VideoDropdown: React.FC<VideoDropdownProps> = ({ onSelect, videoId }) => {
     });
 
   const videos = data?.pages.flatMap((page) => page.videos) || [];
+
+  const handleLoadMore = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // Add this line
+    e.stopPropagation(); // This stops the event from bubbling up
+    fetchNextPage();
+  };
 
   return (
     <div className="space-y-2">
@@ -60,9 +66,10 @@ const VideoDropdown: React.FC<VideoDropdownProps> = ({ onSelect, videoId }) => {
         ))}
         {hasNextPage && (
           <button
-            onClick={() => fetchNextPage()}
+          type="button" // Add this
+            onClick={handleLoadMore} // Use the new handler
             disabled={isFetchingNextPage}
-            className="w-full p-2 text-center text-blue-500"
+            className="w-full p-2 text-center text-blue-500 cursor-pointer"
           >
             {isFetchingNextPage ? "Loading..." : "Load More"}
           </button>
