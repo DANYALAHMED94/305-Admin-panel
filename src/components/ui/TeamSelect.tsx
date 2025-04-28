@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useFormContext, Controller } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface TeamSelectProps {
   name: string;
@@ -21,9 +22,15 @@ interface TeamSelectProps {
 }
 
 const TeamSelect: React.FC<TeamSelectProps> = ({ name, label, teams }) => {
-  const { control } = useFormContext();
+  const { control, watch } = useFormContext();
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  
+  const selectedTeamIds = watch(name) || [];
+  
+  const selectedTeams = useMemo(() => {
+    return teams.filter(team => selectedTeamIds.includes(team._id));
+  }, [teams, selectedTeamIds]);
 
   const filteredTeams = teams.filter((team) =>
     team.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -35,8 +42,25 @@ const TeamSelect: React.FC<TeamSelectProps> = ({ name, label, teams }) => {
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-full justify-between">
-            Select Teams
-            <Search className="ml-2 h-4 w-4 opacity-50" />
+            <div className="flex items-center gap-2 overflow-hidden">
+              {selectedTeams.length > 0 ? (
+                <div className="flex gap-1 overflow-x-auto no-scrollbar">
+                  {selectedTeams.slice(0, 3).map(team => (
+                    <Badge key={team._id} variant="secondary" className="whitespace-nowrap">
+                      {team.name}
+                    </Badge>
+                  ))}
+                  {selectedTeams.length > 3 && (
+                    <Badge variant="secondary" className="whitespace-nowrap">
+                      +{selectedTeams.length - 3} more
+                    </Badge>
+                  )}
+                </div>
+              ) : (
+                <span>Select Teams</span>
+              )}
+            </div>
+            <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80">
