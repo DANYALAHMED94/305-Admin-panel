@@ -1,3 +1,3 @@
-# 305 - Admin - Panel
+# 305 -Network - Admin - Panel
 
 - Author: **Faraz Ahmad**
